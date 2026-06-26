@@ -1,9 +1,8 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>The Legibility Game · FORMFORA</title>
   <style>
     /* --- RESET & VARIABLES --- */
@@ -16,6 +15,7 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
+      -webkit-text-size-adjust: 100%;
     }
 
     :root {
@@ -59,10 +59,10 @@
     #app {
       max-width: 780px;
       width: 100%;
-      margin: 1.5rem 1rem;
+      margin: 1rem 0.75rem;
       background: var(--bg-panel);
       border: 1px solid var(--border-color);
-      padding: 1.5rem 1.8rem;
+      padding: 1.25rem 1rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
       position: relative;
       min-height: 90vh;
@@ -71,30 +71,34 @@
     /* --- HEADER: FORMFORA --- */
     .formfora-header {
       border-bottom: 2px solid var(--formfora-blue);
-      padding-bottom: 0.8rem;
-      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      margin-bottom: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0.5rem;
     }
     .formfora-brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.5rem;
+      flex: 1 1 auto;
+      min-width: 0;
     }
     .formfora-logo {
-      height: 38px;
+      height: 32px;
       width: auto;
       display: block;
+      flex-shrink: 0;
     }
     .formfora-logo-text {
       font-family: var(--font-mono);
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       color: var(--formfora-blue);
+      white-space: nowrap;
     }
     .formfora-logo-text span {
       color: var(--text-primary);
@@ -102,31 +106,32 @@
     }
     .formfora-badge {
       font-family: var(--font-mono);
-      font-size: 8px;
-      letter-spacing: 0.1em;
+      font-size: 7px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-faint);
       border: 1px solid var(--border-color);
-      padding: 3px 10px;
+      padding: 2px 8px;
       background: var(--bg-hover);
+      flex-shrink: 0;
     }
 
-    /* --- LETTERHEAD (simplified) --- */
+    /* --- LETTERHEAD --- */
     .letterhead {
       border-bottom: 1px solid var(--border-color);
-      padding-bottom: 0.8rem;
-      margin-bottom: 0.8rem;
+      padding-bottom: 0.6rem;
+      margin-bottom: 0.6rem;
     }
     .doc-title {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 600;
       color: var(--text-primary);
-      margin: 0 0 0.1rem 0;
+      margin: 0 0 0.05rem 0;
       letter-spacing: -0.01em;
     }
     .doc-ref {
       font-family: var(--font-mono);
-      font-size: 9px;
+      font-size: 8px;
       color: var(--text-faint);
       letter-spacing: 0.02em;
     }
@@ -136,14 +141,14 @@
       align-items: flex-start;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 0.6rem;
+      gap: 0.5rem;
     }
-    .header-left { flex: 1 1 160px; }
+    .header-left { flex: 1 1 140px; }
     .header-right {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 6px;
+      gap: 4px;
       flex: 0 1 auto;
     }
 
@@ -155,10 +160,10 @@
     }
     .toggle-btn {
       font-family: var(--font-mono);
-      font-size: 8px;
-      letter-spacing: 0.08em;
+      font-size: 7px;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      padding: 5px 12px;
+      padding: 4px 10px;
       background: transparent;
       color: var(--text-secondary);
       border: none;
@@ -174,12 +179,12 @@
 
     .mode-toggle {
       font-family: var(--font-mono);
-      font-size: 8px;
+      font-size: 7px;
       color: var(--text-faint);
       cursor: pointer;
       letter-spacing: 0.04em;
       border: 1px solid var(--border-color);
-      padding: 2px 8px;
+      padding: 2px 6px;
       background: transparent;
       transition: 0.1s;
     }
@@ -187,7 +192,7 @@
 
     .role-badge {
       font-family: var(--font-mono);
-      font-size: 8px;
+      font-size: 7px;
       color: var(--text-faint);
       letter-spacing: 0.02em;
     }
@@ -196,60 +201,60 @@
     .form-section {
       background: var(--bg-panel);
       border: 1px solid var(--border-color);
-      padding: 1.5rem 1.5rem;
-      margin-top: 1.5rem;
+      padding: 1.25rem 1rem;
+      margin-top: 1.25rem;
       position: relative;
     }
     .form-section::before {
       content: "INTERNAL MEMO";
       font-family: var(--font-mono);
-      font-size: 8px;
-      letter-spacing: 0.2em;
+      font-size: 7px;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--text-faint);
       position: absolute;
-      top: -0.5rem;
-      left: 1rem;
+      top: -0.45rem;
+      left: 0.75rem;
       background: var(--bg-panel);
-      padding: 0 6px;
+      padding: 0 5px;
     }
 
-    .scenario-header { margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border-color); }
+    .scenario-header { margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
     .scenario-from {
       font-family: var(--font-mono);
-      font-size: 9px;
+      font-size: 8px;
       color: var(--text-faint);
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.15rem;
       word-break: break-word;
     }
     .scenario-subject {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--text-primary);
       font-weight: 500;
     }
 
     .scenario-body {
-      font-size: 13px;
+      font-size: 12.5px;
       line-height: 1.7;
       color: var(--text-secondary);
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
     }
-    .scenario-body p { margin-bottom: 0.7rem; }
+    .scenario-body p { margin-bottom: 0.6rem; }
     .scenario-body em { color: var(--text-primary); font-style: italic; }
 
     .options-label {
       font-family: var(--font-mono);
-      font-size: 8px;
-      letter-spacing: 0.15em;
+      font-size: 7px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text-faint);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
     }
 
     .option {
       border: 1px solid var(--border-color);
-      padding: 0.85rem 1rem;
-      margin-bottom: 0.5rem;
+      padding: 0.7rem 0.8rem;
+      margin-bottom: 0.4rem;
       cursor: pointer;
       transition: border-color 0.12s, background 0.12s;
       background: var(--bg-panel);
@@ -262,43 +267,44 @@
     }
     .option-letter {
       font-family: var(--font-mono);
-      font-size: 9px;
+      font-size: 8px;
       color: var(--text-faint);
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.15rem;
     }
     .option-text {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-primary);
       line-height: 1.5;
     }
     .option-subtext {
-      font-size: 11px;
+      font-size: 10.5px;
       color: var(--text-faint);
-      margin-top: 0.3rem;
+      margin-top: 0.25rem;
       font-style: italic;
       border-top: 1px dashed var(--border-color);
-      padding-top: 0.3rem;
+      padding-top: 0.25rem;
     }
 
     .nav-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 1.2rem;
+      margin-top: 1rem;
       flex-wrap: wrap;
       gap: 0.5rem;
     }
     .nav-btn {
       font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 0.1em;
+      font-size: 8px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      padding: 7px 18px;
+      padding: 6px 16px;
       background: var(--formfora-blue);
       color: var(--bg-panel);
       border: none;
       cursor: pointer;
       transition: 0.1s;
+      min-height: 36px;
     }
     .nav-btn:disabled {
       background: var(--border-color);
@@ -312,7 +318,7 @@
     }
     .progress-text {
       font-family: var(--font-mono);
-      font-size: 9px;
+      font-size: 8px;
       color: var(--text-faint);
     }
 
@@ -323,9 +329,9 @@
       left: 50%;
       transform: translate(-50%, -50%) rotate(-28deg);
       font-family: var(--font-mono);
-      font-size: 40px;
+      font-size: 32px;
       font-weight: 700;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.15em;
       color: var(--formfora-blue);
       opacity: var(--stamp-opacity);
       pointer-events: none;
@@ -338,10 +344,10 @@
     .stamp {
       display: inline-block;
       font-family: var(--font-mono);
-      font-size: 8px;
-      letter-spacing: 0.15em;
+      font-size: 7px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      padding: 3px 8px;
+      padding: 2px 7px;
       border: 2px solid var(--accent-red);
       color: var(--accent-red);
       font-weight: 600;
@@ -354,36 +360,36 @@
     /* --- REPORT --- */
     .report-page {
       border: 1px solid var(--border-color);
-      padding: 1.8rem 1.8rem;
-      margin-top: 1.5rem;
+      padding: 1.25rem 1rem;
+      margin-top: 1.25rem;
       background: var(--bg-panel);
       position: relative;
     }
     .report-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 600;
       border-bottom: 2px solid var(--border-strong);
-      padding-bottom: 0.5rem;
-      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.8rem;
     }
 
     .field-row {
       display: flex;
-      gap: 1.5rem;
-      margin-bottom: 0.8rem;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
       flex-wrap: wrap;
     }
-    .field { flex: 1 1 100px; }
+    .field { flex: 1 1 80px; min-width: 60px; }
     .field-label {
       font-family: var(--font-mono);
-      font-size: 8px;
-      letter-spacing: 0.1em;
+      font-size: 7px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-faint);
       margin-bottom: 2px;
     }
     .field-value {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-primary);
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 2px;
@@ -395,20 +401,20 @@
       justify-content: space-between;
       align-items: baseline;
       border-bottom: 1px dotted var(--border-color);
-      padding: 0.4rem 0;
+      padding: 0.35rem 0;
       flex-wrap: wrap;
-      gap: 0.2rem;
+      gap: 0.15rem;
     }
     .metric-label {
       font-family: var(--font-mono);
-      font-size: 9px;
+      font-size: 8px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: var(--text-secondary);
     }
     .metric-value {
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-primary);
     }
     .metric-value.poor { color: var(--accent-red); }
@@ -416,84 +422,85 @@
     .metric-value.warning { color: var(--accent-amber); }
 
     .finding-item {
-      margin: 0.6rem 0;
-      padding-left: 1rem;
+      margin: 0.5rem 0;
+      padding-left: 0.8rem;
       border-left: 2px solid var(--border-strong);
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-secondary);
       line-height: 1.6;
     }
     .finding-label {
       font-family: var(--font-mono);
-      font-size: 8px;
-      letter-spacing: 0.1em;
+      font-size: 7px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-faint);
-      margin-bottom: 0.1rem;
+      margin-bottom: 0.05rem;
     }
 
     .verdict-box {
       border: 2px solid var(--text-primary);
-      padding: 1.2rem;
-      margin-top: 1.5rem;
+      padding: 1rem;
+      margin-top: 1.25rem;
       background: var(--bg-hover);
     }
     .verdict-label {
       font-family: var(--font-mono);
-      font-size: 8px;
-      letter-spacing: 0.2em;
+      font-size: 7px;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--text-faint);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
     .verdict-text {
-      font-size: 13px;
+      font-size: 12.5px;
       line-height: 1.7;
       color: var(--text-primary);
     }
 
     .disclaimer {
       font-family: var(--font-mono);
-      font-size: 8px;
+      font-size: 7px;
       color: var(--text-faint);
-      margin-top: 1.5rem;
+      margin-top: 1.25rem;
       line-height: 1.6;
       border-top: 1px solid var(--border-color);
-      padding-top: 0.6rem;
+      padding-top: 0.5rem;
     }
 
     .restart-btn {
       font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 0.1em;
+      font-size: 8px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      padding: 8px 20px;
+      padding: 7px 16px;
       background: transparent;
       color: var(--text-primary);
       border: 1px solid var(--border-strong);
       cursor: pointer;
-      margin-top: 1.5rem;
+      margin-top: 1.25rem;
       display: block;
       width: 100%;
       text-align: center;
       transition: 0.1s;
+      min-height: 36px;
     }
     .restart-btn:hover { background: var(--bg-hover); }
 
     .intro-text {
-      font-size: 13px;
+      font-size: 12.5px;
       line-height: 1.7;
       color: var(--text-secondary);
     }
-    .intro-text p { margin-bottom: 0.8rem; }
+    .intro-text p { margin-bottom: 0.7rem; }
     .intro-text strong { color: var(--text-primary); }
 
     .prologue-box {
       background: var(--bg-hover);
       border-left: 4px solid var(--formfora-blue);
-      padding: 1rem 1.2rem;
-      margin: 1rem 0 1.5rem 0;
-      font-size: 13px;
+      padding: 0.8rem 1rem;
+      margin: 0.8rem 0 1.2rem 0;
+      font-size: 12.5px;
       line-height: 1.7;
       color: var(--text-secondary);
     }
@@ -502,56 +509,225 @@
     /* --- BUG / METAMORPHOSIS EASTER EGG --- */
     .bug-reference {
       position: fixed;
-      bottom: 0.5rem;
-      right: 0.5rem;
+      bottom: 0.3rem;
+      right: 0.3rem;
       font-family: var(--font-mono);
-      font-size: 7px;
+      font-size: 6px;
       color: var(--text-faint);
-      opacity: 0.15;
+      opacity: 0.12;
       pointer-events: none;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       writing-mode: vertical-lr;
       text-transform: uppercase;
       z-index: 999;
       transition: opacity 2s ease;
       user-select: none;
     }
-    .bug-reference:hover { opacity: 0.5; pointer-events: auto; cursor: default; }
+    .bug-reference:hover { opacity: 0.4; pointer-events: auto; cursor: default; }
 
     .metamorphosis-trigger {
       position: fixed;
-      top: 0.5rem;
-      right: 0.5rem;
+      top: 0.3rem;
+      right: 0.3rem;
       font-family: var(--font-mono);
-      font-size: 7px;
+      font-size: 6px;
       color: var(--text-faint);
-      opacity: 0.06;
+      opacity: 0.05;
       pointer-events: none;
       z-index: 998;
       user-select: none;
     }
 
-    /* --- MOBILE --- */
-    @media (max-width: 500px) {
-      #app { padding: 1rem; margin: 0.75rem; }
-      .form-section { padding: 1rem; }
-      .report-page { padding: 1rem; }
-      .doc-title { font-size: 18px; }
-      .header-controls { flex-direction: column; align-items: stretch; }
-      .header-right { align-items: stretch; }
-      .toggle-group { align-self: flex-start; }
-      .nav-row { flex-direction: column; align-items: stretch; }
-      .nav-btn { width: 100%; text-align: center; }
-      .watermark { font-size: 28px; }
-      .option { padding: 0.7rem; }
-      .formfora-logo { height: 30px; }
-      .formfora-logo-text { font-size: 14px; }
+    /* --- MOBILE OPTIMIZATION --- */
+    @media (max-width: 640px) {
+      #app {
+        margin: 0.5rem 0.5rem;
+        padding: 0.75rem 0.75rem;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+      .formfora-logo-text {
+        font-size: 12px;
+        white-space: normal;
+        word-break: break-word;
+      }
+      .formfora-logo {
+        height: 28px;
+      }
+      .doc-title {
+        font-size: 18px;
+      }
+      .form-section {
+        padding: 1rem 0.75rem;
+        margin-top: 1rem;
+      }
+      .form-section::before {
+        font-size: 6px;
+        top: -0.4rem;
+        left: 0.5rem;
+        padding: 0 4px;
+      }
+      .report-page {
+        padding: 1rem 0.75rem;
+        margin-top: 1rem;
+      }
+      .header-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+      }
+      .header-right {
+        align-items: stretch;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+      .toggle-group {
+        align-self: flex-start;
+      }
+      .role-badge {
+        align-self: flex-start;
+      }
+      .nav-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+      }
+      .nav-btn {
+        width: 100%;
+        text-align: center;
+        padding: 8px 12px;
+        font-size: 8px;
+        min-height: 40px;
+      }
+      .watermark {
+        font-size: 24px;
+        letter-spacing: 0.1em;
+      }
+      .option {
+        padding: 0.6rem 0.7rem;
+      }
+      .option-text {
+        font-size: 12px;
+      }
+      .option-subtext {
+        font-size: 10px;
+      }
+      .scenario-body {
+        font-size: 12px;
+      }
+      .scenario-subject {
+        font-size: 13px;
+      }
+      .field-row {
+        gap: 0.5rem;
+      }
+      .field {
+        flex: 1 1 60px;
+        min-width: 50px;
+      }
+      .field-value {
+        font-size: 10px;
+      }
+      .metric-row {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .metric-label {
+        font-size: 7px;
+      }
+      .metric-value {
+        font-size: 10px;
+      }
+      .verdict-text {
+        font-size: 12px;
+      }
+      .prologue-box {
+        font-size: 12px;
+        padding: 0.6rem 0.8rem;
+        margin: 0.6rem 0 1rem 0;
+      }
+      .intro-text {
+        font-size: 12px;
+      }
+      .restart-btn {
+        font-size: 7px;
+        padding: 8px 12px;
+        min-height: 40px;
+      }
+      .formfora-badge {
+        font-size: 6px;
+        padding: 2px 6px;
+      }
+      .disclaimer {
+        font-size: 6.5px;
+      }
     }
-    @media (max-width: 380px) {
-      .doc-title { font-size: 16px; }
-      .form-section { padding: 0.7rem; }
-      .formfora-logo { height: 26px; }
-      .formfora-logo-text { font-size: 12px; }
+
+    @media (max-width: 400px) {
+      #app {
+        margin: 0.25rem 0.25rem;
+        padding: 0.5rem 0.5rem;
+      }
+      .formfora-logo-text {
+        font-size: 10px;
+      }
+      .formfora-logo {
+        height: 24px;
+      }
+      .doc-title {
+        font-size: 16px;
+      }
+      .form-section {
+        padding: 0.75rem 0.5rem;
+      }
+      .report-page {
+        padding: 0.75rem 0.5rem;
+      }
+      .option {
+        padding: 0.5rem 0.6rem;
+      }
+      .option-text {
+        font-size: 11px;
+      }
+      .option-subtext {
+        font-size: 9px;
+      }
+      .scenario-body {
+        font-size: 11px;
+      }
+      .scenario-subject {
+        font-size: 12px;
+      }
+      .watermark {
+        font-size: 18px;
+      }
+      .toggle-btn {
+        font-size: 6px;
+        padding: 3px 7px;
+      }
+      .nav-btn {
+        font-size: 7px;
+        padding: 6px 10px;
+        min-height: 34px;
+      }
+      .prologue-box {
+        font-size: 11px;
+        padding: 0.5rem 0.6rem;
+      }
+      .intro-text {
+        font-size: 11px;
+      }
+      .verdict-text {
+        font-size: 11px;
+      }
+      .metric-label {
+        font-size: 6.5px;
+      }
+      .metric-value {
+        font-size: 9px;
+      }
     }
   </style>
 </head>
@@ -635,12 +811,12 @@
   <div id="screenReport" style="display:none;">
     <div class="report-page" style="position:relative;">
       <div class="watermark">FINAL</div>
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.8rem; flex-wrap:wrap; gap:0.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.5rem;">
         <div>
-          <div class="org-name" style="font-family:var(--font-mono);font-size:8px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;">Institutional Compatibility Engine — Output Report</div>
+          <div class="org-name" style="font-family:var(--font-mono);font-size:7px;color:var(--text-faint);letter-spacing:0.08em;text-transform:uppercase;">Institutional Compatibility Engine — Output Report</div>
           <div class="report-title">Performance Review: <span id="reportRoleTitle"></span></div>
         </div>
-        <div id="reportStamp" style="margin-top:0.3rem;"></div>
+        <div id="reportStamp" style="margin-top:0.2rem;"></div>
       </div>
 
       <div class="field-row">
@@ -649,12 +825,12 @@
         <div class="field"><div class="field-label">Report Generated</div><div class="field-value">Auto</div></div>
       </div>
 
-      <div style="border-top: 1px solid var(--border-strong); padding-top:0.8rem; margin-top:0.3rem;">
+      <div style="border-top: 1px solid var(--border-strong); padding-top:0.6rem; margin-top:0.2rem;">
         <div class="options-label">Dimension scores</div>
         <div id="metricsContainer"></div>
       </div>
 
-      <div style="margin-top:1rem;">
+      <div style="margin-top:0.8rem;">
         <div class="options-label">Findings &amp; observations</div>
         <div id="findingsContainer"></div>
       </div>
@@ -1046,4 +1222,3 @@
 </script>
 </body>
 </html>
-```
