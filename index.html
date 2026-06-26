@@ -1,0 +1,518 @@
+
+<style>
+  :root {
+    --paper: #F5F0E8;
+    --paper-dark: #EAE3D2;
+    --ink: #1A1814;
+    --ink-mid: #3D3A34;
+    --ink-light: #6B6660;
+    --ink-faint: #9B9690;
+    --stamp-red: #8B2020;
+    --stamp-blue: #1A3A5C;
+    --rule: #C4BDB0;
+    --rule-strong: #8B8070;
+    --accent-warn: #6B4A00;
+    --font-body: 'Georgia', 'Times New Roman', serif;
+    --font-mono: 'Courier New', 'Courier', monospace;
+    --font-sans: 'Arial Narrow', 'Arial', sans-serif;
+  }
+  .dark-mode {
+    --paper: #1A1814;
+    --paper-dark: #0F0D0A;
+    --ink: #E8E0D0;
+    --ink-mid: #B8B0A0;
+    --ink-light: #8B8378;
+    --ink-faint: #5A5550;
+    --stamp-red: #C4504A;
+    --stamp-blue: #6A9AC4;
+    --rule: #2E2A24;
+    --rule-strong: #4A4540;
+    --accent-warn: #C4903A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--paper-dark); font-family: var(--font-body); color: var(--ink); }
+  #app { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; min-height: 100vh; }
+
+  .letterhead { border-bottom: 2px solid var(--ink); padding-bottom: 1rem; margin-bottom: 0; }
+  .org-name { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-light); }
+  .doc-title { font-size: 22px; font-weight: normal; color: var(--ink); line-height: 1.2; margin: 0.25rem 0; }
+  .doc-ref { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); margin-top: 0.25rem; }
+
+  .header-controls { display: flex; align-items: flex-start; justify-content: space-between; }
+  .header-left { flex: 1; }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+
+  .toggle-group { display: flex; border: 1px solid var(--rule-strong); overflow: hidden; }
+  .toggle-btn { font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; background: var(--paper); color: var(--ink-light); border: none; cursor: pointer; border-right: 1px solid var(--rule-strong); }
+  .toggle-btn:last-child { border-right: none; }
+  .toggle-btn.active { background: var(--ink); color: var(--paper); }
+
+  .mode-toggle { font-family: var(--font-mono); font-size: 9px; color: var(--ink-faint); cursor: pointer; letter-spacing: 0.05em; border: 1px solid var(--rule); padding: 3px 7px; background: transparent; }
+  .mode-toggle:hover { border-color: var(--rule-strong); color: var(--ink-light); }
+
+  .form-section { background: var(--paper); border: 1px solid var(--rule); padding: 1.5rem; margin-top: 1.5rem; position: relative; }
+  .form-section::before { content: attr(data-section); font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); position: absolute; top: -0.6rem; left: 1rem; background: var(--paper); padding: 0 6px; }
+
+  .scenario-header { margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
+  .scenario-from { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); margin-bottom: 0.25rem; }
+  .scenario-subject { font-size: 15px; color: var(--ink); font-weight: normal; }
+
+  .scenario-body { font-size: 13.5px; line-height: 1.75; color: var(--ink-mid); margin-bottom: 1.25rem; }
+  .scenario-body em { font-style: italic; color: var(--ink); }
+
+  .options-label { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.75rem; }
+
+  .option { border: 1px solid var(--rule); padding: 1rem 1.1rem; margin-bottom: 0.6rem; cursor: pointer; transition: border-color 0.15s, background 0.15s; background: var(--paper); }
+  .option:hover { border-color: var(--rule-strong); background: var(--paper-dark); }
+  .option.selected { border-color: var(--ink); background: var(--paper-dark); }
+  .option-letter { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); margin-bottom: 0.3rem; }
+  .option-text { font-size: 13px; color: var(--ink); line-height: 1.55; }
+  .option-subtext { font-size: 11.5px; color: var(--ink-light); margin-top: 0.35rem; font-style: italic; }
+
+  .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; }
+  .nav-btn { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 20px; background: var(--ink); color: var(--paper); border: none; cursor: pointer; }
+  .nav-btn:disabled { background: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
+  .nav-btn.secondary { background: var(--paper); color: var(--ink); border: 1px solid var(--rule-strong); }
+  .progress-text { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); }
+
+  .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-family: var(--font-sans); font-size: 48px; font-weight: bold; letter-spacing: 0.3em; color: rgba(139,32,32,0.06); pointer-events: none; white-space: nowrap; text-transform: uppercase; }
+
+  .stamp { display: inline-block; font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding: 3px 8px; border: 2px solid var(--stamp-red); color: var(--stamp-red); font-weight: bold; transform: rotate(-2deg); }
+  .stamp.blue { border-color: var(--stamp-blue); color: var(--stamp-blue); transform: rotate(1.5deg); }
+
+  .report-page { background: var(--paper); border: 1px solid var(--rule); padding: 2rem; margin-top: 1.5rem; position: relative; }
+  .report-title { font-size: 18px; font-weight: normal; border-bottom: 1px solid var(--rule-strong); padding-bottom: 0.75rem; margin-bottom: 1.25rem; }
+  .metric-row { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px dotted var(--rule); padding: 0.5rem 0; }
+  .metric-label { font-size: 12px; color: var(--ink-light); font-family: var(--font-sans); letter-spacing: 0.05em; }
+  .metric-value { font-family: var(--font-mono); font-size: 13px; color: var(--ink); }
+  .metric-value.poor { color: var(--stamp-red); }
+  .metric-value.strong { color: #2A5A2A; }
+
+  .verdict-box { border: 2px solid var(--ink); padding: 1.25rem; margin-top: 1.5rem; background: var(--paper-dark); }
+  .verdict-label { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
+  .verdict-text { font-size: 14px; line-height: 1.7; color: var(--ink); }
+
+  .finding-item { margin: 0.75rem 0; padding-left: 1.25rem; border-left: 2px solid var(--rule-strong); font-size: 12.5px; color: var(--ink-mid); line-height: 1.6; }
+  .finding-label { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.2rem; }
+
+  .restart-btn { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; padding: 10px 24px; background: transparent; color: var(--ink); border: 1px solid var(--rule-strong); cursor: pointer; margin-top: 1.5rem; display: block; width: 100%; text-align: center; }
+  .restart-btn:hover { background: var(--paper-dark); }
+
+  .disclaimer { font-family: var(--font-mono); font-size: 9px; color: var(--ink-faint); margin-top: 1.5rem; line-height: 1.6; border-top: 1px solid var(--rule); padding-top: 0.75rem; }
+
+  .role-badge { font-family: var(--font-mono); font-size: 9px; color: var(--ink-faint); }
+  .intro-text { font-size: 13.5px; line-height: 1.8; color: var(--ink-mid); }
+  .intro-text p { margin-bottom: 0.9rem; }
+  .field-row { display: flex; gap: 1.5rem; margin-bottom: 1rem; }
+  .field { flex: 1; }
+  .field-label { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+  .field-value { font-size: 13px; color: var(--ink); border-bottom: 1px solid var(--rule-strong); padding-bottom: 3px; font-family: var(--font-mono); }
+</style>
+
+<div id="app">
+  <div class="letterhead">
+    <div class="header-controls">
+      <div class="header-left">
+        <div class="org-name">Contemporary Arts Ecosystem — East Africa Region</div>
+        <div class="doc-title">The Legibility Game</div>
+        <div class="doc-ref">FORM CAE/LG/2026 &nbsp;·&nbsp; Confidential Staff Assessment Tool &nbsp;·&nbsp; Do Not Distribute</div>
+      </div>
+      <div class="header-right">
+        <button class="mode-toggle" onclick="toggleMode()" id="modeBtn">[ light mode ]</button>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="roleArtist" onclick="setRole('artist')">Artist</button>
+          <button class="toggle-btn" id="roleManager" onclick="setRole('manager')">Programme Manager</button>
+        </div>
+        <div class="role-badge" id="roleBadge">REF: ARTIST/2026/001</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screenIntro">
+    <div class="form-section" data-section="Intake Document" style="position:relative;">
+      <div class="watermark">OFFICIAL</div>
+      <div class="field-row">
+        <div class="field"><div class="field-label">Applicant Type</div><div class="field-value" id="roleDisplay">Artist / Practitioner</div></div>
+        <div class="field"><div class="field-label">Assessment Year</div><div class="field-value">2026</div></div>
+        <div class="field"><div class="field-label">Status</div><div class="field-value"><span class="stamp blue">Active</span></div></div>
+      </div>
+      <div class="intro-text">
+        <p>Welcome to the Legibility Assessment. This tool measures your institutional fitness across a series of operational scenarios drawn from standard field conditions in the contemporary art ecosystem.</p>
+        <p>You will face <strong>six scenarios</strong>. Each requires a decision. Your responses will be processed by our Institutional Compatibility Engine and scored across four dimensions: <em>Capital Access, Community Standing, Decolonial Performance,</em> and <em>Structural Legibility.</em></p>
+        <p>You will not see your scores during the assessment. The system will produce a full Performance Report upon completion. This is by design. In practice, you also cannot see your scores. You discover them when the grant is declined, when the invitation does not arrive, when you are discussed at a gathering you were not invited to.</p>
+        <p style="font-style:italic; color:var(--ink-light);">Select your role above, then proceed when ready.</p>
+      </div>
+      <div class="nav-row">
+        <div></div>
+        <button class="nav-btn" onclick="startGame()">Begin Assessment ↓</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screenGame" style="display:none;">
+    <div class="form-section" data-section="Scenario" id="scenarioBox" style="position:relative;">
+      <div class="watermark" id="scenarioWatermark">MEMO</div>
+      <div class="scenario-header">
+        <div class="scenario-from" id="scenarioFrom"></div>
+        <div class="scenario-subject" id="scenarioSubject"></div>
+      </div>
+      <div class="scenario-body" id="scenarioBody"></div>
+      <div class="options-label">Select one course of action:</div>
+      <div id="optionsContainer"></div>
+      <div class="nav-row">
+        <div class="progress-text" id="progressText"></div>
+        <button class="nav-btn" id="nextBtn" onclick="nextScenario()" disabled>Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screenReport" style="display:none;">
+    <div class="report-page" style="position:relative;">
+      <div class="watermark">FINAL</div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+        <div>
+          <div class="org-name">Institutional Compatibility Engine — Output Report</div>
+          <div class="report-title">Annual Performance Review: <span id="reportRoleTitle"></span></div>
+        </div>
+        <div id="reportStamp" style="margin-top:0.5rem;"></div>
+      </div>
+
+      <div class="field-row">
+        <div class="field"><div class="field-label">Assessment Period</div><div class="field-value">2026</div></div>
+        <div class="field"><div class="field-label">Scenarios Completed</div><div class="field-value">6 / 6</div></div>
+        <div class="field"><div class="field-label">Report Generated</div><div class="field-value">Auto</div></div>
+      </div>
+
+      <div style="border-top: 1px solid var(--rule-strong); padding-top:1rem; margin-top:0.5rem;">
+        <div class="options-label">Dimension scores</div>
+        <div id="metricsContainer"></div>
+      </div>
+
+      <div style="margin-top:1.25rem;">
+        <div class="options-label">Findings &amp; observations</div>
+        <div id="findingsContainer"></div>
+      </div>
+
+      <div class="verdict-box">
+        <div class="verdict-label">Overall Assessment</div>
+        <div class="verdict-text" id="verdictText"></div>
+      </div>
+
+      <div class="disclaimer">
+        This report was generated automatically by the Institutional Compatibility Engine. No human reviewed it. That is also, in a structural sense, the point. The system does not require malice to reproduce itself. It requires compliance. &nbsp;·&nbsp; FORM CAE/LG/2026
+      </div>
+
+      <button class="restart-btn" onclick="restartGame()">↩ Complete a new assessment</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let isDark = true;
+let currentRole = 'artist';
+let currentScenario = 0;
+let selections = [];
+let scores = { capital: 0, community: 0, decolonial: 0, legibility: 0 };
+
+document.documentElement.classList.add('dark-mode');
+
+const artistScenarios = [
+  {
+    from: "FROM: Programme Coordinator, Northern Lights Foundation &lt;grants@nlf.org&gt;",
+    subject: "RE: Application — Artist Residency Exchange Programme 2026",
+    watermark: "MEMO",
+    body: `The Foundation invites applications for a six-month paid residency in Amsterdam. Successful applicants will work with our curatorial team to develop new work responding to themes of <em>migration, memory, and cultural hybridity</em>. Applicants should submit a portfolio and a 500-word statement of intent.\n\nYour work has been flagged by our East Africa regional contact. We would be delighted to support your practice.`,
+    options: [
+      { letter: "A", text: "Apply. Frame your work through the themes they named — migration, memory, hybridity. Adjust your statement to emphasise your diasporic perspective and transnational references.", sub: "The themes aren't wrong. You can work within them honestly.", scores: { capital: 3, community: -1, decolonial: 0, legibility: 3 } },
+      { letter: "B", text: "Apply. Submit your actual statement — your work is about land dispossession, state violence, and the specific political conditions of your city. You describe these plainly.", sub: "Your real work. As it is.", scores: { capital: -1, community: 3, decolonial: 3, legibility: -2 } },
+      { letter: "C", text: "Apply. Write one statement that does both — weaves your actual concerns through the foundation's preferred vocabulary. Dispossession becomes memory. State violence becomes difficult histories.", sub: "The sophisticated move. Also the one that teaches you fluency in a second language for describing your own life.", scores: { capital: 2, community: 0, decolonial: -1, legibility: 2 } },
+      { letter: "D", text: "Do not apply. You have read who funds the foundation. You know what the residency produces: one impact story for their annual report and your CV bearing their name as credential.", sub: "Correct analysis. No money. No studio. The structural critique does not pay rent.", scores: { capital: -3, community: 2, decolonial: 3, legibility: -3 } }
+    ]
+  },
+  {
+    from: "FROM: Artistic Director, Meridian Biennale &lt;simonnj@meridianbiennale.org&gt;",
+    subject: "Invitation — Artist participation, Meridian Biennale 2026",
+    watermark: "INVITATION",
+    body: `We are delighted to invite you to participate in the Meridian Biennale 2026, themed <em>"Futures of the South."</em> The Biennale is curated by a Paris-based curatorial collective with extensive experience in international contemporary art. Production fees are available. Your travel and accommodation will be covered.\n\nWe would ask that you produce a new work for the main pavilion responding to the curatorial concept. The curatorial team would be delighted to speak with you about directions.`,
+    options: [
+      { letter: "A", text: "Accept. Work with the curatorial team. Develop something that speaks to their concept. It is a large platform and the work will be seen.", sub: "Visibility. Also: a Paris-based curatorial team will now have shaped a work about your context.", scores: { capital: 2, community: -1, decolonial: -1, legibility: 3 } },
+      { letter: "B", text: "Accept. Produce the work you intended to make anyway. Present it under their theme. Let the curatorial frame carry whatever meaning it needs to carry.", sub: "Practical. The work exists. The biennale gets a label.", scores: { capital: 2, community: 1, decolonial: 1, legibility: 2 } },
+      { letter: "C", text: "Accept, with conditions. Reply asking about the curatorial rationale for no East African curators on a biennale themed 'Futures of the South.' Request a public statement from the artistic director.", sub: "The correct question. Will not be well received.", scores: { capital: -2, community: 3, decolonial: 3, legibility: -2 } },
+      { letter: "D", text: "Decline. Explain in your reply that you do not produce work to be interpreted by curatorial frameworks designed without you. Publish your reply.", sub: "Principled. Also the end of several future invitations.", scores: { capital: -3, community: 2, decolonial: 3, legibility: -3 } }
+    ]
+  },
+  {
+    from: "FROM: Gallery Director, Cornerstone Gallery &lt;director@cornerstonegallery.org&gt;",
+    subject: "Representation inquiry — response requested",
+    watermark: "PRIVATE",
+    body: `Following your recent exhibition, Cornerstone Gallery would like to discuss the possibility of representing your work. We have strong relationships with collectors in London, Zurich, and New York. Our curatorial team would work with you to position your practice for the international market.\n\nOne note: our experience suggests that works dealing with <em>explicitly political subject matter</em> can limit collector appetite. We would welcome a conversation about how to frame your practice for breadth of reach.`,
+    options: [
+      { letter: "A", text: "Agree to representation. Accept the framing conversation. The international market requires translation and you are willing to do it.", sub: "Pragmatic. Your work now travels. What it says when it arrives is a separate question.", scores: { capital: 3, community: -2, decolonial: -2, legibility: 3 } },
+      { letter: "B", text: "Agree to representation. Decline the framing conversation. State that your work is as it is and you are available for collectors who want it that way.", sub: "A negotiation. See how they respond.", scores: { capital: 1, community: 1, decolonial: 1, legibility: 1 } },
+      { letter: "C", text: "Decline representation. Write back explaining that a gallery asking you to soften political content for collector comfort is asking you to make your work less honest. Thank them for their time.", sub: "Your studio remains your own. So does your rent.", scores: { capital: -2, community: 2, decolonial: 3, legibility: -2 } },
+      { letter: "D", text: "Ask for six months to consider, then use that time to build direct collector relationships outside gallery structures. Do not reply after six months.", sub: "Neither in nor out. Also not a plan.", scores: { capital: 0, community: 0, decolonial: 0, legibility: -1 } }
+    ]
+  },
+  {
+    from: "FROM: Programme Team, 38° West Arts Trust &lt;programmes@38west.org&gt;",
+    subject: "Artist Talk — request",
+    watermark: "REQUEST",
+    body: `We are hosting an evening of artist talks as part of our annual public programme. We would like to invite you to speak about your practice. The event will be attended by our funders, board members, and invited guests.\n\nWe offer a speaker fee of UGX 150,000. The evening will be professionally documented and shared on our channels.`,
+    options: [
+      { letter: "A", text: "Accept. Present your practice as you normally would. Speak about your actual concerns, including structural ones. Some of the funders in the room fund the structure you are critiquing.", sub: "The honest talk. You will be photographed smiling with the board afterward.", scores: { capital: 1, community: 2, decolonial: 2, legibility: 0 } },
+      { letter: "B", text: "Accept. Tailor the presentation to the room — emphasise craft, process, personal journey. Leave the structural analysis for a different context.", sub: "Smooth. The documentation looks good. The fee covers a week of groceries.", scores: { capital: 1, community: 0, decolonial: -1, legibility: 2 } },
+      { letter: "C", text: "Accept. Use the talk to read, in full, the section of your recent essay that names the structural contradictions of exactly this kind of institution. Politely.", sub: "The room will go quiet. You will not be invited back. The recording will be edited.", scores: { capital: -1, community: 3, decolonial: 3, legibility: -2 } },
+      { letter: "D", text: "Decline. The fee is too low and the function of the event is to provide content for funder reports. Your presence legitimises their impact metrics. Reply politely saying you are unavailable.", sub: "Correct diagnosis. 150,000 shillings is also 150,000 shillings.", scores: { capital: -1, community: 1, decolonial: 1, legibility: -1 } }
+    ]
+  },
+  {
+    from: "FROM: Venice Biennale Uganda Pavilion Committee &lt;pavilion@veniceuganda.org&gt;",
+    subject: "URGENT — Pavilion participation, final list",
+    watermark: "URGENT",
+    body: `The Uganda Pavilion committee has confirmed your selection for the 2027 Venice Biennale. This is a significant achievement and a major international platform.\n\nProduction costs will be covered by a grant from the Euler Foundation. The Euler Foundation's endowment was established from holdings in the extractive sector in the DRC and Angola, a fact that has been raised by several organisations. The committee has reviewed this and confirmed it does not preclude accepting the funding.\n\nWe require your formal acceptance within 48 hours.`,
+    options: [
+      { letter: "A", text: "Accept immediately. Venice is Venice. The work will be seen. The source of funds is a separate question from the platform's value.", sub: "CV: Venice Biennale 2027. The Euler Foundation gets a tax deduction and an art credit.", scores: { capital: 3, community: -1, decolonial: -3, legibility: 3 } },
+      { letter: "B", text: "Accept, but make the funding source a visible element of the work itself. The installation names who paid for it and from where.", sub: "This is political art. The committee may withdraw the invitation when they see the proposal.", scores: { capital: 0, community: 3, decolonial: 3, legibility: -1 } },
+      { letter: "C", text: "Request a 72-hour extension. Spend it contacting the other selected artists to discuss a collective position on the funding. Act on what the group decides.", sub: "Solidarity. 72 hours is also not very long to build consensus.", scores: { capital: -1, community: 3, decolonial: 2, legibility: 0 } },
+      { letter: "D", text: "Decline. Publish a statement explaining why, naming the foundation, naming the extractive holdings, naming the countries. Submit it to two publications before the 48 hours are up.", sub: "The record is clear. You are not in Venice. The foundation finds another artist.", scores: { capital: -3, community: 2, decolonial: 3, legibility: -3 } }
+    ]
+  },
+  {
+    from: "FROM: Yourself",
+    subject: "The question you have been avoiding",
+    watermark: "PERSONAL",
+    body: `You have been working for eight years. Your CV now lists residencies, biennales, gallery relationships, and institutional support. You are legible to the field.\n\nA younger artist asks you — directly, in private — how to build a practice without disappearing into the pipeline. They are good. They are principled. They are asking you because you were once where they are.\n\nWhat do you tell them?`,
+    options: [
+      { letter: "A", text: "Tell them the system works if you know how to work it. Give them names. Introduce them to the right people. That is what mentorship is.", sub: "True. Also: the system now has another practitioner who owes its logic a debt.", scores: { capital: 1, community: 1, decolonial: -2, legibility: 2 } },
+      { letter: "B", text: "Tell them the truth about every compromise you made and why. Name the costs. Let them make their own decision with full information.", sub: "The honest answer. Unusual in this field.", scores: { capital: 0, community: 3, decolonial: 3, legibility: -1 } },
+      { letter: "C", text: "Tell them to build outside — to find the small spaces, the kitchen tables, the reading groups, the people working without letterheads. Point them toward the dark matter.", sub: "Also true. Also: the dark matter does not pay rent.", scores: { capital: -2, community: 3, decolonial: 3, legibility: -2 } },
+      { letter: "D", text: "Tell them you are still figuring it out. Which is the only true sentence any of you can say.", sub: "Honest. Unhelpful. Human.", scores: { capital: 0, community: 2, decolonial: 1, legibility: 0 } }
+    ]
+  }
+];
+
+const managerScenarios = [
+  {
+    from: "FROM: Board of Trustees, 38° West Arts Trust",
+    subject: "RE: Curatorial appointment — main exhibition 2026",
+    watermark: "BOARD",
+    body: `The board requires your recommendation for a lead curator for our flagship exhibition, themed <em>"Sovereignty and African Futures."</em> Three candidates have been shortlisted. Your recommendation will be reviewed at Thursday's board meeting.\n\nThe board has noted that funder partners have expressed a preference for curatorial appointments that signal "international credibility and institutional rigour."`,
+    options: [
+      { letter: "A", text: "Recommend the Ugandan candidate — a Makerere graduate with a Goldsmiths MA who has curated one major show at the gallery and has not been retained. Her networks are local. Her research is serious.", sub: "Correct hire. Reduced legibility to European funders. The board will note their concern.", scores: { capital: -2, community: 3, decolonial: 3, legibility: -2 } },
+      { letter: "B", text: "Recommend the European anthropologist — trained at a German university, arrived in Kampala via the Goethe-Zentrum, extensive European funder network. She is already embedded.", sub: "Smooth appointment. No Black curator retained in over two decades, now over three.", scores: { capital: 3, community: -2, decolonial: -3, legibility: 3 } },
+      { letter: "C", text: "Recommend the diasporic candidate — Jamaican-born, Amsterdam-based, recognisable credentials to Dutch funders. Racial identity signals transformation. Structure remains identical.", sub: "The sophisticated move. The pipeline changes its appearance not its direction.", scores: { capital: 2, community: 0, decolonial: -1, legibility: 3 } },
+      { letter: "D", text: "Bring the shortlist to an open conversation with your full team — including programme staff and artists in current residencies — before making a recommendation to the board.", sub: "Democratic process. The board did not ask for this. The Thursday meeting is in three days.", scores: { capital: -1, community: 3, decolonial: 2, legibility: -1 } }
+    ]
+  },
+  {
+    from: "FROM: Sigrid Haakon Trust &lt;grants@shaakon.org&gt;",
+    subject: "Grant conditions — annual reporting cycle",
+    watermark: "FUNDER",
+    body: `Following receipt of your Year 2 narrative report, the Trust has identified several areas where the report does not meet our impact measurement criteria. Specifically: beneficiary numbers require independent verification; "community transformation" outcomes require measurable indicators; and political programming must be reviewed under our neutrality clause.\n\nPlease revise the report using the attached framework. Disbursement of the Year 3 tranche is contingent on receipt of the revised report within 30 days.`,
+    options: [
+      { letter: "A", text: "Revise the report using their framework. Reframe the political programming as 'civic engagement.' Translate your actual outcomes into their measurement language. Submit on time.", sub: "The institution survives. The work is now described in terms the funder chose.", scores: { capital: 3, community: -1, decolonial: -2, legibility: 3 } },
+      { letter: "B", text: "Request a call with the programme officer. Explain that the neutrality clause directly conflicts with your mandate to respond to local political conditions. Negotiate.", sub: "Worth trying. The tranche is still contingent. The clock is running.", scores: { capital: 1, community: 2, decolonial: 2, legibility: 0 } },
+      { letter: "C", text: "Revise the report. Add a section — clearly labelled — explaining that the impact framework does not adequately capture the political context your programming responds to. Submit this version.", sub: "Transparent. The trust may request a further revision. The section may be quietly noted and never mentioned.", scores: { capital: 1, community: 2, decolonial: 2, legibility: 1 } },
+      { letter: "D", text: "Decline to revise under the neutrality clause. Write to the trust explaining that programming responding to state violence is not 'partisan' — it is the minimum ethical position of a public arts institution. Accept the likely consequence.", sub: "Principled. The Year 3 tranche does not arrive. The institution calculates what closes first.", scores: { capital: -3, community: 3, decolonial: 3, legibility: -3 } }
+    ]
+  },
+  {
+    from: "FROM: Local artist collective, via email",
+    subject: "Request — emergency use of space, political teach-in",
+    watermark: "REQUEST",
+    body: `A group of local artists has written requesting emergency use of your main hall for a teach-in responding to recently passed legislation targeting marginalised communities. Several of your current residents are involved. The teach-in will directly critique government policy.\n\nYour three largest funders have all expressed — separately, informally — that they expect you to maintain a non-partisan public profile. One is a foreign embassy fund.`,
+    options: [
+      { letter: "A", text: "Approve the space. Issue a brief statement that your institution is committed to supporting artists who engage with political conditions in their communities. No further comment.", sub: "The minimum decent position. The embassy fund will note it.", scores: { capital: -1, community: 3, decolonial: 3, legibility: -1 } },
+      { letter: "B", text: "Approve the space, but ask that the teach-in not be formally associated with the institution's name in any public materials — the artists can convene as a private gathering.", sub: "The space is used. Your neutrality is protected. The artists notice the conditions attached.", scores: { capital: 1, community: 0, decolonial: -1, legibility: 1 } },
+      { letter: "C", text: "Decline, citing the funding conditions and your obligation to protect the institution's long-term stability for the broader community of artists who depend on it.", sub: "The argument institutions use to justify every capitulation.", scores: { capital: 2, community: -3, decolonial: -3, legibility: 2 } },
+      { letter: "D", text: "Approve the space. Attend the teach-in yourself. Present alongside the artists. Co-sign the statement they produce. Send it to your funders before they see it in the press.", sub: "You have chosen. The institution will survive or it will not. You know which outcome is more likely.", scores: { capital: -3, community: 3, decolonial: 3, legibility: -3 } }
+    ]
+  },
+  {
+    from: "FROM: Head of Programmes",
+    subject: "Internal review — artist manifesto writing toolkit",
+    watermark: "INTERNAL",
+    body: `The artist manifesto writing toolkit, in use since 2019, is due for a scheduled review. It currently references three exemplary models: a British outsider artist, a British celebrity ceramicist known for his frocks, and a Japanese pop-commercial movement built on consumer aesthetics.\n\nThe Ugandan Anti-Homosexuality Act was passed in 2023. Several artists in our current cohort are affected by legislation your toolkit has never acknowledged. A junior staff member has flagged this formally.`,
+    options: [
+      { letter: "A", text: "Convene a working group — including the junior staff member who raised it, current residents, and two or three practitioners from outside the institution — to rebuild the toolkit from scratch.", sub: "Right process. Six months minimum. Funders will not see an output in this reporting cycle.", scores: { capital: -1, community: 3, decolonial: 3, legibility: 0 } },
+      { letter: "B", text: "Add a supplementary module on 'artists responding to political conditions' and append it to the existing toolkit. Keep the original references. Acknowledge the gap in the introduction.", sub: "An improvement. Also: Grayson Perry is still on page one.", scores: { capital: 0, community: 1, decolonial: 1, legibility: 1 } },
+      { letter: "C", text: "Commission an external consultant — a respected practitioner from outside Uganda — to revise the toolkit. Budget: available from the capacity-building line.", sub: "The answer to every internal problem that might create discomfort: outsource it.", scores: { capital: 1, community: -1, decolonial: -1, legibility: 2 } },
+      { letter: "D", text: "Leave the toolkit unchanged for this cycle. Note it in the next strategic planning document. Prioritise the building campaign, which is currently behind schedule.", sub: "What happens. What has always happened. The toolkit is still unchanged in 2026.", scores: { capital: 1, community: -2, decolonial: -3, legibility: 1 } }
+    ]
+  },
+  {
+    from: "FROM: Board Chair",
+    subject: "RE: Governance review — board composition",
+    watermark: "CONFIDENTIAL",
+    body: `Following your internal governance review, you have identified that three of your seven board members also govern or hold equity positions in organisations your institution funds, partners with, or receives donations from. One board member is represented by the commercial gallery that serves as your associate partner. Another chairs both your board and a collectors' society that recently donated to your building campaign.\n\nThe board chair has asked for your recommendation.`,
+    options: [
+      { letter: "A", text: "Recommend a full governance audit with external independent review, to be published on your website. Recommend that conflicted members recuse themselves from relevant decisions pending the audit.", sub: "The right recommendation. The board will discuss. Several members will note their long service to the institution.", scores: { capital: -2, community: 3, decolonial: 2, legibility: -1 } },
+      { letter: "B", text: "Recommend a conflict-of-interest register — a document in which board members self-declare their conflicts and recuse from specific votes. Implement quietly. Do not publicise.", sub: "The standard NGO response. The conflicts persist. They are now on a register.", scores: { capital: 1, community: 0, decolonial: -1, legibility: 2 } },
+      { letter: "C", text: "Recommend nothing. The board chair is one of the conflicted members. Raising it further risks your own position. Write a note to yourself about it and file it.", sub: "What most people do. Also what keeps the structure intact.", scores: { capital: 2, community: -2, decolonial: -2, legibility: 1 } },
+      { letter: "D", text: "Recommend full board renewal over 18 months, with a public call for nominations prioritising practitioners and community members without commercial conflicts. Present this in writing to the full board, not just the chair.", sub: "Career-limiting. The record is clear. The institution either accepts this or shows you what it values.", scores: { capital: -3, community: 3, decolonial: 3, legibility: -2 } }
+    ]
+  },
+  {
+    from: "FROM: Yourself",
+    subject: "The end of the cycle",
+    watermark: "PERSONAL",
+    body: `The building is finished. Phase One is open. The impact report lists 847 beneficiaries, 14 international partners, 3 award nominations, and a quote from you about ecosystem building. The photo on the cover shows a smiling young artist in the new studio space.\n\nA junior colleague — a serious person, younger than you, doing careful work — has written an essay about the institution. It is accurate. It names the board overlaps, the funding contradictions, the curatorial pattern. It is not unkind. It is thorough.\n\nYou have been asked by the board chair, informally, whether you might "have a word."`,
+    options: [
+      { letter: "A", text: "Have the word. Suggest — gently — that the essay is generating attention the institution does not need right now, given the Phase Two campaign. Do not use the word 'tone.'", sub: "You have become the structure. This is what it asks of you.", scores: { capital: 2, community: -3, decolonial: -3, legibility: 2 } },
+      { letter: "B", text: "Tell the board chair you will not have the word. The essay is accurate. If the institution cannot tolerate accurate description of itself, that is the problem the institution needs to address.", sub: "The right answer. Your contract is annual.", scores: { capital: -2, community: 3, decolonial: 3, legibility: -2 } },
+      { letter: "C", text: "Have the word — but use it to tell your colleague everything you know about the institution that the essay has not yet found. Give them your files.", sub: "This does not appear in any performance review framework.", scores: { capital: -3, community: 3, decolonial: 3, legibility: -3 } },
+      { letter: "D", text: "Write a formal institutional response to the essay — engaging its arguments seriously, acknowledging what is accurate, committing to specific changes in a named timeline. Publish it.", sub: "What an institution that took itself seriously would do. See how long this takes to draft before you understand why it almost never happens.", scores: { capital: -1, community: 3, decolonial: 2, legibility: 0 } }
+    ]
+  }
+];
+
+let scenarios = artistScenarios;
+
+function toggleMode() {
+  isDark = !isDark;
+  const btn = document.getElementById('modeBtn');
+  if (isDark) {
+    document.documentElement.classList.add('dark-mode');
+    btn.textContent = '[ light mode ]';
+  } else {
+    document.documentElement.classList.remove('dark-mode');
+    btn.textContent = '[ dark mode ]';
+  }
+}
+
+function setRole(role) {
+  currentRole = role;
+  document.getElementById('roleArtist').classList.toggle('active', role === 'artist');
+  document.getElementById('roleManager').classList.toggle('active', role === 'manager');
+  document.getElementById('roleDisplay').textContent = role === 'artist' ? 'Artist / Practitioner' : 'Programme Manager';
+  document.getElementById('roleBadge').textContent = role === 'artist' ? 'REF: ARTIST/2026/001' : 'REF: MANAGER/2026/001';
+  scenarios = role === 'artist' ? artistScenarios : managerScenarios;
+}
+
+function startGame() {
+  currentScenario = 0;
+  selections = [];
+  scores = { capital: 0, community: 0, decolonial: 0, legibility: 0 };
+  document.getElementById('screenIntro').style.display = 'none';
+  document.getElementById('screenGame').style.display = 'block';
+  renderScenario();
+}
+
+function renderScenario() {
+  const s = scenarios[currentScenario];
+  document.getElementById('scenarioFrom').innerHTML = s.from;
+  document.getElementById('scenarioSubject').textContent = s.subject;
+  document.getElementById('scenarioWatermark').textContent = s.watermark;
+
+  const bodyLines = s.body.split('\n\n');
+  document.getElementById('scenarioBody').innerHTML = bodyLines.map(l => `<p style="margin-bottom:0.8rem">${l}</p>`).join('');
+
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  s.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<div class="option-letter">Option ${opt.letter}</div><div class="option-text">${opt.text}</div><div class="option-subtext">${opt.sub}</div>`;
+    div.onclick = () => selectOption(i, div);
+    container.appendChild(div);
+  });
+
+  document.getElementById('progressText').textContent = `Scenario ${currentScenario + 1} of ${scenarios.length}`;
+  document.getElementById('nextBtn').disabled = true;
+  selections[currentScenario] = null;
+}
+
+function selectOption(index, el) {
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selections[currentScenario] = index;
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextScenario() {
+  const sel = selections[currentScenario];
+  if (sel === null) return;
+  const s = scenarios[currentScenario].options[sel].scores;
+  scores.capital += s.capital;
+  scores.community += s.community;
+  scores.decolonial += s.decolonial;
+  scores.legibility += s.legibility;
+
+  currentScenario++;
+  if (currentScenario >= scenarios.length) {
+    showReport();
+  } else {
+    renderScenario();
+  }
+}
+
+function showReport() {
+  document.getElementById('screenGame').style.display = 'none';
+  document.getElementById('screenReport').style.display = 'block';
+
+  const role = currentRole === 'artist' ? 'Artist / Practitioner' : 'Programme Manager';
+  document.getElementById('reportRoleTitle').textContent = role;
+
+  const max = 9, min = -9;
+  function norm(v) { return Math.round(((v - min) / (max - min)) * 100); }
+  const caps = norm(scores.capital);
+  const comm = norm(scores.community);
+  const dec = norm(scores.decolonial);
+  const leg = norm(scores.legibility);
+
+  function rateClass(v) { return v >= 60 ? 'strong' : v <= 35 ? 'poor' : ''; }
+  function rateLabel(v) { return v >= 60 ? 'Strong' : v <= 35 ? 'Below threshold' : 'Moderate'; }
+
+  document.getElementById('metricsContainer').innerHTML = `
+    <div class="metric-row"><span class="metric-label">Capital access</span><span class="metric-value ${rateClass(caps)}">${caps}% — ${rateLabel(caps)}</span></div>
+    <div class="metric-row"><span class="metric-label">Community standing</span><span class="metric-value ${rateClass(comm)}">${comm}% — ${rateLabel(comm)}</span></div>
+    <div class="metric-row"><span class="metric-label">Decolonial performance</span><span class="metric-value ${rateClass(dec)}">${dec}% — ${rateLabel(dec)}</span></div>
+    <div class="metric-row"><span class="metric-label">Structural legibility</span><span class="metric-value ${rateClass(leg)}">${leg}% — ${rateLabel(leg)}</span></div>
+  `;
+
+  const overall = caps + comm + dec + leg;
+  let stampHtml, verdictHtml, findingsHtml;
+
+  if (leg >= 55 && dec <= 40) {
+    stampHtml = `<span class="stamp blue">Cleared — Funder Ready</span>`;
+    verdictHtml = `You have demonstrated an excellent understanding of how the system works. Your decisions consistently prioritised institutional survival, funder relationships, and structural legibility. You made every compromise the field required and performed them with fluency. The impact report will look excellent. On Monday, the same people will run the same programmes with the same European partners using the same soft frameworks. Your name will appear in the acknowledgements. The frame holds.`;
+    findingsHtml = `
+      <div class="finding-item"><div class="finding-label">Pattern identified</div>You consistently translated your actual conditions into the language funders preferred. This is called institutional sophistication. It is also called something else.</div>
+      <div class="finding-item"><div class="finding-label">Trajectory projection</div>Your CV will continue to grow. Invitations will arrive. The things you do not name will remain unnamed. The structure will cite you as evidence that it works.</div>
+    `;
+  } else if (comm >= 55 && dec >= 55 && leg <= 40) {
+    stampHtml = `<span class="stamp">Noted — Not Retained</span>`;
+    verdictHtml = `You made the principled choices. You named the contradictions. You asked the correct questions. You are now being discussed at a gathering you were not invited to. Your arguments were described as well-researched. Your person was described as confrontational. A generational diagnosis has been offered. The field cannot accommodate the argument, so it has pathologised the arguer. This has happened before. It will happen again. The essay you are writing about it will be cited in a grant report as evidence that the field generates serious internal criticism. The frame holds.`;
+    findingsHtml = `
+      <div class="finding-item"><div class="finding-label">Pattern identified</div>You refused the available compromises. The available compromises did not become unavailable. They are still there. The field is patient.</div>
+      <div class="finding-item"><div class="finding-label">Trajectory projection</div>You will continue to work. The institutions will continue without you. One of you will outlast the other. The record does not yet indicate which.</div>
+    `;
+  } else if (caps >= 55 && comm <= 40) {
+    stampHtml = `<span class="stamp">Filed — Excellent Metrics</span>`;
+    verdictHtml = `You built something. The numbers are real: the capital, the partnerships, the buildings. The artists who needed studios had studios. Some of them will not remember, later, that the studios came with conditions. Some will remember and decide the conditions were worth it. Some will write essays about it. You will read those essays and feel something that does not have a clean name. The structure you maintained was not one you designed. You collected its dividends and made choices that felt like pragmatism. The field rewarded you. That is, precisely, the problem named.`;
+    findingsHtml = `
+      <div class="finding-item"><div class="finding-label">Pattern identified</div>Capital and community standing moved in opposite directions. The system chose capital. The system usually does.</div>
+      <div class="finding-item"><div class="finding-label">Note</div>The community whose standing you eroded will still be there when the funding architecture shifts. The funders will not.</div>
+    `;
+  } else {
+    stampHtml = `<span class="stamp blue">Inconclusive — File Open</span>`;
+    verdictHtml = `Your decisions did not resolve into a coherent institutional position. You negotiated, qualified, and hedged. This is, in fact, what most practitioners do. The field is not binary: pure compliance and pure refusal are both minority positions. Most people live in the middle, making partial compromises, carrying partial integrity, arriving at partial outcomes. The system is designed to make this feel like wisdom. It is not wisdom. It is the cost of operating inside a structure that leaves no clean exits. The file remains open. The question remains open. That is the most honest place to be, and also the most uncomfortable.`;
+    findingsHtml = `
+      <div class="finding-item"><div class="finding-label">Pattern identified</div>Inconsistent signalling across scenarios. The institution cannot classify you. This is more disorienting to the institution than outright refusal.</div>
+      <div class="finding-item"><div class="finding-label">Observation</div>The people who change fields are rarely the ones who refused loudly. They are the ones who became impossible to categorise.</div>
+    `;
+  }
+
+  document.getElementById('reportStamp').innerHTML = stampHtml;
+  document.getElementById('findingsContainer').innerHTML = findingsHtml;
+  document.getElementById('verdictText').textContent = verdictHtml;
+}
+
+function restartGame() {
+  currentScenario = 0;
+  selections = [];
+  scores = { capital: 0, community: 0, decolonial: 0, legibility: 0 };
+  document.getElementById('screenReport').style.display = 'none';
+  document.getElementById('screenIntro').style.display = 'block';
+}
+</script>
