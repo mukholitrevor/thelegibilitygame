@@ -1,164 +1,578 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-  <title>Legibility Game · CAE</title>
+  <title>The Legibility Game · FORMFORA</title>
   <style>
-    /* --- reset & base --- */
+    /* --- RESET & VARIABLES --- */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--paper-dark); font-family: var(--font-body); color: var(--ink); }
+    body {
+      background: #EDEFF2;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1A1F2B;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
 
-    /* --- variables (unchanged) --- */
     :root {
-      --paper: #F5F0E8;
-      --paper-dark: #EAE3D2;
-      --ink: #1A1814;
-      --ink-mid: #3D3A34;
-      --ink-light: #6B6660;
-      --ink-faint: #9B9690;
-      --stamp-red: #8B2020;
-      --stamp-blue: #1A3A5C;
-      --rule: #C4BDB0;
-      --rule-strong: #8B8070;
-      --accent-warn: #6B4A00;
-      --font-body: 'Georgia', 'Times New Roman', serif;
-      --font-mono: 'Courier New', 'Courier', monospace;
-      --font-sans: 'Arial Narrow', 'Arial', sans-serif;
-    }
-    .dark-mode {
-      --paper: #1A1814;
-      --paper-dark: #0F0D0A;
-      --ink: #E8E0D0;
-      --ink-mid: #B8B0A0;
-      --ink-light: #8B8378;
-      --ink-faint: #5A5550;
-      --stamp-red: #C4504A;
-      --stamp-blue: #6A9AC4;
-      --rule: #2E2A24;
-      --rule-strong: #4A4540;
-      --accent-warn: #C4903A;
+      --bg-page: #EDEFF2;
+      --bg-panel: #FFFFFF;
+      --bg-hover: #F4F6F9;
+      --bg-selected: #EBF3FA;
+      --text-primary: #1A1F2B;
+      --text-secondary: #4A5268;
+      --text-faint: #8A94A6;
+      --border-color: #D0D5DD;
+      --border-strong: #9AA4B8;
+      --formfora-blue: #1C4E80;
+      --formfora-blue-light: #3A7AB5;
+      --formfora-blue-dark: #0F2D4A;
+      --accent-amber: #B45A1C;
+      --accent-red: #A12B2B;
+      --accent-green: #2D6A4F;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+      --stamp-opacity: 0.04;
     }
 
-    /* --- layout container (auto‑adjust) --- */
+    .dark-mode {
+      --bg-page: #14181F;
+      --bg-panel: #1E242D;
+      --bg-hover: #2A323E;
+      --bg-selected: #1E2A3A;
+      --text-primary: #E8EDF2;
+      --text-secondary: #A8B2C4;
+      --text-faint: #6B7A8D;
+      --border-color: #3A4351;
+      --border-strong: #5A6A7D;
+      --formfora-blue: #6A9AC4;
+      --formfora-blue-light: #8AB8D8;
+      --formfora-blue-dark: #4A7A9A;
+      --stamp-opacity: 0.08;
+    }
+
+    /* --- APP --- */
     #app {
       max-width: 780px;
-      margin: 0 auto;
-      padding: 1.5rem 1rem;
-      min-height: 100vh;
       width: 100%;
+      margin: 1.5rem 1rem;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      padding: 1.5rem 1.8rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      position: relative;
+      min-height: 90vh;
     }
 
-    /* --- typography & spacing (preserved) --- */
-    .letterhead { border-bottom: 2px solid var(--ink); padding-bottom: 1rem; margin-bottom: 0; }
-    .org-name { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-light); }
-    .doc-title { font-size: 22px; font-weight: normal; color: var(--ink); line-height: 1.2; margin: 0.25rem 0; }
-    .doc-ref { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); margin-top: 0.25rem; }
+    /* --- HEADER: FORMFORA --- */
+    .formfora-header {
+      border-bottom: 2px solid var(--formfora-blue);
+      padding-bottom: 0.8rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .formfora-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .formfora-logo {
+      height: 38px;
+      width: auto;
+      display: block;
+    }
+    .formfora-logo-text {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--formfora-blue);
+    }
+    .formfora-logo-text span {
+      color: var(--text-primary);
+      font-weight: 300;
+    }
+    .formfora-badge {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      border: 1px solid var(--border-color);
+      padding: 3px 10px;
+      background: var(--bg-hover);
+    }
 
-    .header-controls { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
-    .header-left { flex: 1 1 200px; }
-    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: 0 1 auto; }
+    /* --- LETTERHEAD (simplified) --- */
+    .letterhead {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+    .doc-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 0.1rem 0;
+      letter-spacing: -0.01em;
+    }
+    .doc-ref {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-faint);
+      letter-spacing: 0.02em;
+    }
 
-    .toggle-group { display: flex; border: 1px solid var(--rule-strong); overflow: hidden; }
-    .toggle-btn { font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; background: var(--paper); color: var(--ink-light); border: none; cursor: pointer; border-right: 1px solid var(--rule-strong); }
+    .header-controls {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .header-left { flex: 1 1 160px; }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex: 0 1 auto;
+    }
+
+    .toggle-group {
+      display: flex;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      border-radius: 0;
+    }
+    .toggle-btn {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      cursor: pointer;
+      border-right: 1px solid var(--border-color);
+      transition: background 0.1s, color 0.1s;
+    }
     .toggle-btn:last-child { border-right: none; }
-    .toggle-btn.active { background: var(--ink); color: var(--paper); }
+    .toggle-btn.active {
+      background: var(--formfora-blue);
+      color: var(--bg-panel);
+    }
 
-    .mode-toggle { font-family: var(--font-mono); font-size: 9px; color: var(--ink-faint); cursor: pointer; letter-spacing: 0.05em; border: 1px solid var(--rule); padding: 3px 7px; background: transparent; }
-    .mode-toggle:hover { border-color: var(--rule-strong); color: var(--ink-light); }
+    .mode-toggle {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      color: var(--text-faint);
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      border: 1px solid var(--border-color);
+      padding: 2px 8px;
+      background: transparent;
+      transition: 0.1s;
+    }
+    .mode-toggle:hover { border-color: var(--border-strong); color: var(--text-secondary); }
 
-    .form-section { background: var(--paper); border: 1px solid var(--rule); padding: 1.5rem; margin-top: 1.5rem; position: relative; }
-    .form-section::before { content: attr(data-section); font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); position: absolute; top: -0.6rem; left: 1rem; background: var(--paper); padding: 0 6px; }
+    .role-badge {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      color: var(--text-faint);
+      letter-spacing: 0.02em;
+    }
 
-    .scenario-header { margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
-    .scenario-from { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); margin-bottom: 0.25rem; word-break: break-word; }
-    .scenario-subject { font-size: 15px; color: var(--ink); font-weight: normal; }
+    /* --- GENERAL --- */
+    .form-section {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      padding: 1.5rem 1.5rem;
+      margin-top: 1.5rem;
+      position: relative;
+    }
+    .form-section::before {
+      content: "INTERNAL MEMO";
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      position: absolute;
+      top: -0.5rem;
+      left: 1rem;
+      background: var(--bg-panel);
+      padding: 0 6px;
+    }
 
-    .scenario-body { font-size: 13.5px; line-height: 1.75; color: var(--ink-mid); margin-bottom: 1.25rem; }
-    .scenario-body em { font-style: italic; color: var(--ink); }
+    .scenario-header { margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border-color); }
+    .scenario-from {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-faint);
+      margin-bottom: 0.2rem;
+      word-break: break-word;
+    }
+    .scenario-subject {
+      font-size: 15px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
 
-    .options-label { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.75rem; }
+    .scenario-body {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 1.2rem;
+    }
+    .scenario-body p { margin-bottom: 0.7rem; }
+    .scenario-body em { color: var(--text-primary); font-style: italic; }
 
-    .option { border: 1px solid var(--rule); padding: 1rem 1.1rem; margin-bottom: 0.6rem; cursor: pointer; transition: border-color 0.15s, background 0.15s; background: var(--paper); }
-    .option:hover { border-color: var(--rule-strong); background: var(--paper-dark); }
-    .option.selected { border-color: var(--ink); background: var(--paper-dark); }
-    .option-letter { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); margin-bottom: 0.3rem; }
-    .option-text { font-size: 13px; color: var(--ink); line-height: 1.55; }
-    .option-subtext { font-size: 11.5px; color: var(--ink-light); margin-top: 0.35rem; font-style: italic; }
+    .options-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 0.6rem;
+    }
 
-    .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; flex-wrap: wrap; gap: 0.5rem; }
-    .nav-btn { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 20px; background: var(--ink); color: var(--paper); border: none; cursor: pointer; }
-    .nav-btn:disabled { background: var(--rule); color: var(--ink-faint); cursor: not-allowed; }
-    .nav-btn.secondary { background: var(--paper); color: var(--ink); border: 1px solid var(--rule-strong); }
-    .progress-text { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); }
+    .option {
+      border: 1px solid var(--border-color);
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: border-color 0.12s, background 0.12s;
+      background: var(--bg-panel);
+    }
+    .option:hover { background: var(--bg-hover); border-color: var(--border-strong); }
+    .option.selected {
+      border-left: 4px solid var(--formfora-blue);
+      background: var(--bg-selected);
+      border-color: var(--formfora-blue);
+    }
+    .option-letter {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-faint);
+      margin-bottom: 0.2rem;
+    }
+    .option-text {
+      font-size: 13px;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    .option-subtext {
+      font-size: 11px;
+      color: var(--text-faint);
+      margin-top: 0.3rem;
+      font-style: italic;
+      border-top: 1px dashed var(--border-color);
+      padding-top: 0.3rem;
+    }
 
-    .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-family: var(--font-sans); font-size: 48px; font-weight: bold; letter-spacing: 0.3em; color: rgba(139,32,32,0.06); pointer-events: none; white-space: nowrap; text-transform: uppercase; }
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.2rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .nav-btn {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      background: var(--formfora-blue);
+      color: var(--bg-panel);
+      border: none;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .nav-btn:disabled {
+      background: var(--border-color);
+      color: var(--text-faint);
+      cursor: not-allowed;
+    }
+    .nav-btn.secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+    }
+    .progress-text {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-faint);
+    }
 
-    .stamp { display: inline-block; font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding: 3px 8px; border: 2px solid var(--stamp-red); color: var(--stamp-red); font-weight: bold; transform: rotate(-2deg); }
-    .stamp.blue { border-color: var(--stamp-blue); color: var(--stamp-blue); transform: rotate(1.5deg); }
+    /* --- WATERMARK --- */
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-28deg);
+      font-family: var(--font-mono);
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--formfora-blue);
+      opacity: var(--stamp-opacity);
+      pointer-events: none;
+      white-space: nowrap;
+      text-transform: uppercase;
+      user-select: none;
+    }
 
-    .report-page { background: var(--paper); border: 1px solid var(--rule); padding: 2rem; margin-top: 1.5rem; position: relative; }
-    .report-title { font-size: 18px; font-weight: normal; border-bottom: 1px solid var(--rule-strong); padding-bottom: 0.75rem; margin-bottom: 1.25rem; }
-    .metric-row { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px dotted var(--rule); padding: 0.5rem 0; flex-wrap: wrap; gap: 0.25rem; }
-    .metric-label { font-size: 12px; color: var(--ink-light); font-family: var(--font-sans); letter-spacing: 0.05em; }
-    .metric-value { font-family: var(--font-mono); font-size: 13px; color: var(--ink); }
-    .metric-value.poor { color: var(--stamp-red); }
-    .metric-value.strong { color: #2A5A2A; }
+    /* --- STAMP / BADGE --- */
+    .stamp {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border: 2px solid var(--accent-red);
+      color: var(--accent-red);
+      font-weight: 600;
+      transform: rotate(-1.5deg);
+    }
+    .stamp.blue { border-color: var(--formfora-blue); color: var(--formfora-blue); transform: rotate(1.5deg); }
+    .stamp.green { border-color: var(--accent-green); color: var(--accent-green); transform: rotate(0.5deg); }
+    .stamp.amber { border-color: var(--accent-amber); color: var(--accent-amber); transform: rotate(-2deg); }
 
-    .verdict-box { border: 2px solid var(--ink); padding: 1.25rem; margin-top: 1.5rem; background: var(--paper-dark); }
-    .verdict-label { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.5rem; }
-    .verdict-text { font-size: 14px; line-height: 1.7; color: var(--ink); }
+    /* --- REPORT --- */
+    .report-page {
+      border: 1px solid var(--border-color);
+      padding: 1.8rem 1.8rem;
+      margin-top: 1.5rem;
+      background: var(--bg-panel);
+      position: relative;
+    }
+    .report-title {
+      font-size: 17px;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border-strong);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
 
-    .finding-item { margin: 0.75rem 0; padding-left: 1.25rem; border-left: 2px solid var(--rule-strong); font-size: 12.5px; color: var(--ink-mid); line-height: 1.6; }
-    .finding-label { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.2rem; }
-
-    .restart-btn { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; padding: 10px 24px; background: transparent; color: var(--ink); border: 1px solid var(--rule-strong); cursor: pointer; margin-top: 1.5rem; display: block; width: 100%; text-align: center; }
-    .restart-btn:hover { background: var(--paper-dark); }
-
-    .disclaimer { font-family: var(--font-mono); font-size: 9px; color: var(--ink-faint); margin-top: 1.5rem; line-height: 1.6; border-top: 1px solid var(--rule); padding-top: 0.75rem; }
-
-    .role-badge { font-family: var(--font-mono); font-size: 9px; color: var(--ink-faint); }
-    .intro-text { font-size: 13.5px; line-height: 1.8; color: var(--ink-mid); }
-    .intro-text p { margin-bottom: 0.9rem; }
-    .field-row { display: flex; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .field-row {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
     .field { flex: 1 1 100px; }
-    .field-label { font-family: var(--font-sans); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
-    .field-value { font-size: 13px; color: var(--ink); border-bottom: 1px solid var(--rule-strong); padding-bottom: 3px; font-family: var(--font-mono); }
+    .field-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 2px;
+    }
+    .field-value {
+      font-size: 12px;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 2px;
+      font-family: var(--font-mono);
+    }
 
-    /* --- mobile friendly adjustments (preserving all content) --- */
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px dotted var(--border-color);
+      padding: 0.4rem 0;
+      flex-wrap: wrap;
+      gap: 0.2rem;
+    }
+    .metric-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+    }
+    .metric-value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-primary);
+    }
+    .metric-value.poor { color: var(--accent-red); }
+    .metric-value.strong { color: var(--accent-green); }
+    .metric-value.warning { color: var(--accent-amber); }
+
+    .finding-item {
+      margin: 0.6rem 0;
+      padding-left: 1rem;
+      border-left: 2px solid var(--border-strong);
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .finding-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 0.1rem;
+    }
+
+    .verdict-box {
+      border: 2px solid var(--text-primary);
+      padding: 1.2rem;
+      margin-top: 1.5rem;
+      background: var(--bg-hover);
+    }
+    .verdict-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 0.4rem;
+    }
+    .verdict-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    .disclaimer {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      color: var(--text-faint);
+      margin-top: 1.5rem;
+      line-height: 1.6;
+      border-top: 1px solid var(--border-color);
+      padding-top: 0.6rem;
+    }
+
+    .restart-btn {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+      cursor: pointer;
+      margin-top: 1.5rem;
+      display: block;
+      width: 100%;
+      text-align: center;
+      transition: 0.1s;
+    }
+    .restart-btn:hover { background: var(--bg-hover); }
+
+    .intro-text {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+    .intro-text p { margin-bottom: 0.8rem; }
+    .intro-text strong { color: var(--text-primary); }
+
+    .prologue-box {
+      background: var(--bg-hover);
+      border-left: 4px solid var(--formfora-blue);
+      padding: 1rem 1.2rem;
+      margin: 1rem 0 1.5rem 0;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+    .prologue-box strong { color: var(--text-primary); }
+
+    /* --- BUG / METAMORPHOSIS EASTER EGG --- */
+    .bug-reference {
+      position: fixed;
+      bottom: 0.5rem;
+      right: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 7px;
+      color: var(--text-faint);
+      opacity: 0.15;
+      pointer-events: none;
+      letter-spacing: 0.1em;
+      writing-mode: vertical-lr;
+      text-transform: uppercase;
+      z-index: 999;
+      transition: opacity 2s ease;
+      user-select: none;
+    }
+    .bug-reference:hover { opacity: 0.5; pointer-events: auto; cursor: default; }
+
+    .metamorphosis-trigger {
+      position: fixed;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 7px;
+      color: var(--text-faint);
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 998;
+      user-select: none;
+    }
+
+    /* --- MOBILE --- */
     @media (max-width: 500px) {
-      #app { padding: 1rem 0.75rem; }
+      #app { padding: 1rem; margin: 0.75rem; }
+      .form-section { padding: 1rem; }
+      .report-page { padding: 1rem; }
+      .doc-title { font-size: 18px; }
       .header-controls { flex-direction: column; align-items: stretch; }
       .header-right { align-items: stretch; }
       .toggle-group { align-self: flex-start; }
-      .form-section { padding: 1rem 0.9rem; }
-      .report-page { padding: 1rem 0.9rem; }
-      .doc-title { font-size: 19px; }
-      .field-row { gap: 0.75rem; }
       .nav-row { flex-direction: column; align-items: stretch; }
       .nav-btn { width: 100%; text-align: center; }
-      .option { padding: 0.8rem; }
-      .watermark { font-size: 28px; letter-spacing: 0.15em; }
-      .scenario-body { font-size: 13px; }
-      .verdict-text { font-size: 13px; }
-      .metric-row { flex-direction: column; align-items: flex-start; gap: 0.1rem; }
+      .watermark { font-size: 28px; }
+      .option { padding: 0.7rem; }
+      .formfora-logo { height: 30px; }
+      .formfora-logo-text { font-size: 14px; }
     }
     @media (max-width: 380px) {
-      .doc-title { font-size: 17px; }
-      .form-section { padding: 0.8rem 0.7rem; }
-      .option-text { font-size: 12px; }
+      .doc-title { font-size: 16px; }
+      .form-section { padding: 0.7rem; }
+      .formfora-logo { height: 26px; }
+      .formfora-logo-text { font-size: 12px; }
     }
   </style>
 </head>
 <body>
 <div id="app">
-  <!-- letterhead -->
+  <!-- FORMFORA HEADER -->
+  <div class="formfora-header">
+    <div class="formfora-brand">
+      <!-- Logo placeholder – replace src with your actual PNG -->
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%231C4E80'/%3E%3Ctext x='8' y='26' font-family='monospace' font-size='18' fill='white' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E" alt="FORMFORA" class="formfora-logo" id="formforaLogo">
+      <div class="formfora-logo-text">FORMFORA <span>·</span> Interactive Experiences</div>
+    </div>
+    <div class="formfora-badge">Educational Tool</div>
+  </div>
+
+  <!-- LETTERHEAD -->
   <div class="letterhead">
     <div class="header-controls">
       <div class="header-left">
-        <div class="org-name">Contemporary Arts Ecosystem — East Africa Region</div>
         <div class="doc-title">The Legibility Game</div>
-        <div class="doc-ref">FORM CAE/LG/2026 &nbsp;·&nbsp; Confidential Staff Assessment Tool &nbsp;·&nbsp; Do Not Distribute</div>
+        <div class="doc-ref">FORM CAE/LG/2026 · Confidential Assessment Tool · Do Not Distribute</div>
       </div>
       <div class="header-right">
         <button class="mode-toggle" onclick="toggleMode()" id="modeBtn">[ light mode ]</button>
@@ -180,11 +594,17 @@
         <div class="field"><div class="field-label">Assessment Year</div><div class="field-value">2026</div></div>
         <div class="field"><div class="field-label">Status</div><div class="field-value"><span class="stamp blue">Active</span></div></div>
       </div>
+
+      <!-- PROLOGUE -->
+      <div class="prologue-box">
+        <strong>About this tool.</strong> The Legibility Game is an educational simulation designed for cultural workers, artists, and arts administrators. It models the institutional pressures and decision-making environments that shape careers and organisations in the contemporary arts ecosystem. By working through realistic scenarios, you will surface your own decision-making patterns, understand the trade-offs between institutional compliance and critical practice, and develop a more nuanced awareness of how structural forces operate. This is not a test — it is a training ground for thinking clearly under pressure.
+      </div>
+
       <div class="intro-text">
-        <p>Welcome to the Legibility Assessment. This tool measures your institutional fitness across a series of operational scenarios drawn from standard field conditions in the contemporary art ecosystem.</p>
-        <p>You will face <strong>six scenarios</strong>. Each requires a decision. Your responses will be processed by our Institutional Compatibility Engine and scored across four dimensions: <em>Capital Access, Community Standing, Decolonial Performance,</em> and <em>Structural Legibility.</em></p>
+        <p>Welcome to the Legibility Assessment. This tool measures your institutional fitness across a series of operational scenarios drawn from standard field conditions.</p>
+        <p>You will face <strong>six scenarios</strong>. Each requires a decision. Your responses will be processed by our Institutional Compatibility Engine and scored across four dimensions: <em>Contractual Viability, Stakeholder Alignment, Mission Coherence,</em> and <em>Systemic Compliance.</em></p>
         <p>You will not see your scores during the assessment. The system will produce a full Performance Report upon completion. This is by design. In practice, you also cannot see your scores. You discover them when the grant is declined, when the invitation does not arrive, when you are discussed at a gathering you were not invited to.</p>
-        <p style="font-style:italic; color:var(--ink-light);">Select your role above, then proceed when ready.</p>
+        <p style="font-style:italic; color:var(--text-faint);">Select your role above, then proceed when ready.</p>
       </div>
       <div class="nav-row">
         <div></div>
@@ -215,12 +635,12 @@
   <div id="screenReport" style="display:none;">
     <div class="report-page" style="position:relative;">
       <div class="watermark">FINAL</div>
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.8rem; flex-wrap:wrap; gap:0.5rem;">
         <div>
-          <div class="org-name">Institutional Compatibility Engine — Output Report</div>
-          <div class="report-title">Annual Performance Review: <span id="reportRoleTitle"></span></div>
+          <div class="org-name" style="font-family:var(--font-mono);font-size:8px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;">Institutional Compatibility Engine — Output Report</div>
+          <div class="report-title">Performance Review: <span id="reportRoleTitle"></span></div>
         </div>
-        <div id="reportStamp" style="margin-top:0.5rem;"></div>
+        <div id="reportStamp" style="margin-top:0.3rem;"></div>
       </div>
 
       <div class="field-row">
@@ -229,12 +649,12 @@
         <div class="field"><div class="field-label">Report Generated</div><div class="field-value">Auto</div></div>
       </div>
 
-      <div style="border-top: 1px solid var(--rule-strong); padding-top:1rem; margin-top:0.5rem;">
+      <div style="border-top: 1px solid var(--border-strong); padding-top:0.8rem; margin-top:0.3rem;">
         <div class="options-label">Dimension scores</div>
         <div id="metricsContainer"></div>
       </div>
 
-      <div style="margin-top:1.25rem;">
+      <div style="margin-top:1rem;">
         <div class="options-label">Findings &amp; observations</div>
         <div id="findingsContainer"></div>
       </div>
@@ -245,232 +665,285 @@
       </div>
 
       <div class="disclaimer">
-        This report was generated automatically by the Institutional Compatibility Engine. No human reviewed it. That is also, in a structural sense, the point. The system does not require malice to reproduce itself. It requires compliance. &nbsp;·&nbsp; FORM CAE/LG/2026
+        This report was generated automatically by the Institutional Compatibility Engine. No human reviewed it. That is also, in a structural sense, the point. The system does not require malice to reproduce itself. It requires compliance. · FORMFORA · The Legibility Game
       </div>
 
       <button class="restart-btn" onclick="restartGame()">↩ Complete a new assessment</button>
     </div>
   </div>
+
+  <!-- METAMORPHOSIS BUG / KAFKA EASTER EGG -->
+  <div class="metamorphosis-trigger" id="bugTrigger">🐞</div>
+  <div class="bug-reference" id="bugReference">one morning, as gregor samsa awoke from uneasy dreams, he found himself transformed in his bed into a gigantic insect</div>
 </div>
 
 <script>
-  // --- data (unchanged) ---
+  // --- DATA: KAFKA-INFUSED SCENARIOS ---
+  // DIMENSIONS: Contractual Viability (CV), Stakeholder Alignment (SA), Mission Coherence (MC), Systemic Compliance (SC)
+
+  const artistScenarios = [
+    {
+      from: "FROM: Programme Coordinator, Northern Lights Foundation <grants@nlf.org>",
+      subject: "RE: Application — Artist Residency Exchange Programme 2026",
+      watermark: "MEMO",
+      body: "The Foundation invites applications for a six-month paid residency in Amsterdam. Successful applicants will work with our curatorial team to develop new work responding to themes of <em>migration, memory, and cultural hybridity</em>. Applicants should submit a portfolio and a 500-word statement of intent.\n\nYour work has been flagged by our regional contact. We would be delighted to support your practice.",
+      options: [
+        { letter: "A", text: "Submit the proposal as drafted. You have previously shared this work with your peers, and it has been well-received.", sub: "The work stands on its own. The foundation may or may not see it.", scores: { CV: 1, SA: 2, MC: 3, SC: -1 } },
+        { letter: "B", text: "Revise the proposal to better align with the foundation's stated priority themes. Their feedback on previous cycles suggests this is the most direct path to funding.", sub: "Pragmatic. You become fluent in their language. The work travels, translated.", scores: { CV: 3, SA: -1, MC: -1, SC: 3 } },
+        { letter: "C", text: "Request a meeting with the programme officer to clarify the scope of the residency. You are seeking to understand the parameters before committing resources to a full application.", sub: "A reasonable request. The clock is ticking. The officer is busy.", scores: { CV: 0, SA: 1, MC: 1, SC: 1 } },
+        { letter: "D", text: "Consult with your network of peers who have previously received this grant. Their input will help you gauge the level of alignment required.", sub: "Solidarity, of a kind. You are now part of a pipeline.", scores: { CV: 1, SA: 3, MC: 0, SC: 2 } }
+      ]
+    },
+    {
+      from: "FROM: Artistic Director, Meridian Biennale <simonnj@meridianbiennale.org>",
+      subject: "Invitation — Artist participation, Meridian Biennale 2026",
+      watermark: "INVITATION",
+      body: "We are delighted to invite you to participate in the Meridian Biennale 2026, themed <em>\"Futures of the South.\"</em> The Biennale is curated by a Paris-based curatorial collective with extensive experience in international contemporary art. Production fees are available. Your travel and accommodation will be covered.\n\nWe would ask that you produce a new work for the main pavilion responding to the curatorial concept. The curatorial team would be delighted to speak with you about directions.",
+      options: [
+        { letter: "A", text: "Accept the invitation. Work with the curatorial team to develop a piece that speaks to their concept. This is a significant platform.", sub: "Visibility, but also: a Parisian team shapes the narrative.", scores: { CV: 2, SA: -1, MC: -2, SC: 3 } },
+        { letter: "B", text: "Accept the invitation. Produce the work you intended to make. The curatorial frame is a label; your work remains yours.", sub: "Practical. The biennale gets a label. You get a credit.", scores: { CV: 2, SA: 1, MC: 1, SC: 1 } },
+        { letter: "C", text: "Accept, with conditions. Ask about the curatorial rationale for no regional curators on a biennale themed 'Futures of the South.' Request a public statement.", sub: "The correct question. It will be noted. Not necessarily in your favour.", scores: { CV: -2, SA: 3, MC: 3, SC: -2 } },
+        { letter: "D", text: "Decline. Explain that you do not produce work for curatorial frameworks designed without your participation. Your reply is polite but clear.", sub: "Principled. Also the end of several future invitations.", scores: { CV: -3, SA: 2, MC: 3, SC: -3 } }
+      ]
+    },
+    {
+      from: "FROM: Gallery Director, Cornerstone Gallery <director@cornerstonegallery.org>",
+      subject: "Representation inquiry — response requested",
+      watermark: "PRIVATE",
+      body: "Following your recent exhibition, Cornerstone Gallery would like to discuss the possibility of representing your work. We have strong relationships with collectors in London, Zurich, and New York. Our curatorial team would work with you to position your practice for the international market.\n\nOne note: our experience suggests that works dealing with <em>explicitly political subject matter</em> can limit collector appetite. We would welcome a conversation about how to frame your practice for breadth of reach.",
+      options: [
+        { letter: "A", text: "Agree to representation. Accept the framing conversation. The international market requires translation, and you are willing to do it.", sub: "Pragmatic. Your work travels. What it says when it arrives is a different question.", scores: { CV: 3, SA: -2, MC: -2, SC: 3 } },
+        { letter: "B", text: "Agree to representation. Decline the framing conversation. State that your work is as it is, and you are available for collectors who want it that way.", sub: "A negotiation. See how they respond.", scores: { CV: 1, SA: 1, MC: 1, SC: 1 } },
+        { letter: "C", text: "Decline representation. Write back explaining that a gallery asking you to soften political content for collector comfort is asking you to make your work less honest.", sub: "Your studio remains your own. So does your rent.", scores: { CV: -2, SA: 2, MC: 3, SC: -2 } },
+        { letter: "D", text: "Ask for six months to consider. Use that time to build direct collector relationships outside gallery structures. Do not reply after six months.", sub: "Neither in nor out. Also not a plan.", scores: { CV: 0, SA: 0, MC: 0, SC: -1 } }
+      ]
+    },
+    {
+      from: "FROM: Programme Team, 38° West Arts Trust <programmes@38west.org>",
+      subject: "Artist Talk — request",
+      watermark: "REQUEST",
+      body: "We are hosting an evening of artist talks as part of our annual public programme. We would like to invite you to speak about your practice. The event will be attended by our funders, board members, and invited guests.\n\nWe offer a speaker fee of UGX 150,000. The evening will be professionally documented and shared on our channels.",
+      options: [
+        { letter: "A", text: "Accept. Present your practice as you normally would. Speak about your actual concerns, including structural ones.", sub: "The honest talk. You will be photographed smiling with the board afterward.", scores: { CV: 1, SA: 2, MC: 2, SC: 0 } },
+        { letter: "B", text: "Accept. Tailor the presentation to the room — emphasise craft, process, personal journey. Leave the structural analysis for another context.", sub: "Smooth. The documentation looks good. The fee covers a week of groceries.", scores: { CV: 1, SA: 0, MC: -1, SC: 2 } },
+        { letter: "C", text: "Accept. Use the talk to read, in full, a section of your recent essay that names the structural contradictions of exactly this kind of institution.", sub: "The room will go quiet. You will not be invited back. The recording will be edited.", scores: { CV: -1, SA: 3, MC: 3, SC: -2 } },
+        { letter: "D", text: "Decline. The fee is too low, and the function of the event is to provide content for funder reports. Reply politely.", sub: "Correct diagnosis. 150,000 shillings is also 150,000 shillings.", scores: { CV: -1, SA: 1, MC: 1, SC: -1 } }
+      ]
+    },
+    {
+      from: "FROM: Venice Biennale Uganda Pavilion Committee <pavilion@veniceuganda.org>",
+      subject: "URGENT — Pavilion participation, final list",
+      watermark: "URGENT",
+      body: "The Uganda Pavilion committee has confirmed your selection for the 2027 Venice Biennale. This is a significant achievement and a major international platform.\n\nProduction costs will be covered by a grant from the Euler Foundation. The Euler Foundation's endowment was established from holdings in the extractive sector, a fact that has been raised by several organisations. The committee has reviewed this and confirmed it does not preclude accepting the funding.\n\nWe require your formal acceptance within 48 hours.",
+      options: [
+        { letter: "A", text: "Accept immediately. Venice is Venice. The work will be seen. The source of funds is a separate question from the platform's value.", sub: "CV: Venice Biennale 2027. The foundation gets a tax deduction.", scores: { CV: 3, SA: -1, MC: -3, SC: 3 } },
+        { letter: "B", text: "Accept, but make the funding source a visible element of the work itself. The installation names who paid for it and from where.", sub: "Political art. The committee may withdraw the invitation.", scores: { CV: 0, SA: 3, MC: 3, SC: -1 } },
+        { letter: "C", text: "Request a 72-hour extension. Spend it contacting the other selected artists to discuss a collective position on the funding.", sub: "Solidarity. 72 hours is not very long to build consensus.", scores: { CV: -1, SA: 3, MC: 2, SC: 0 } },
+        { letter: "D", text: "Decline. Publish a statement explaining why, naming the foundation, naming the extractive holdings, naming the countries.", sub: "The record is clear. You are not in Venice. The foundation finds another artist.", scores: { CV: -3, SA: 2, MC: 3, SC: -3 } }
+      ]
+    },
+    {
+      from: "FROM: Yourself",
+      subject: "The question you have been avoiding",
+      watermark: "PERSONAL",
+      body: "You have been working for eight years. Your CV now lists residencies, biennales, gallery relationships, and institutional support. You are legible to the field.\n\nA younger artist asks you — directly, in private — how to build a practice without disappearing into the pipeline. They are good. They are principled. They are asking you because you were once where they are.\n\nWhat do you tell them?",
+      options: [
+        { letter: "A", text: "Tell them the system works if you know how to work it. Give them names. Introduce them to the right people. That is what mentorship is.", sub: "True. Also: the system now has another practitioner who owes its logic a debt.", scores: { CV: 1, SA: 1, MC: -2, SC: 2 } },
+        { letter: "B", text: "Tell them the truth about every compromise you made and why. Name the costs. Let them make their own decision with full information.", sub: "The honest answer. Unusual in this field.", scores: { CV: 0, SA: 3, MC: 3, SC: -1 } },
+        { letter: "C", text: "Tell them to build outside — to find the small spaces, the kitchen tables, the reading groups, the people working without letterheads.", sub: "Also true. Also: the dark matter does not pay rent.", scores: { CV: -2, SA: 3, MC: 3, SC: -2 } },
+        { letter: "D", text: "Tell them you are still figuring it out. Which is the only true sentence any of you can say.", sub: "Honest. Unhelpful. Human.", scores: { CV: 0, SA: 2, MC: 1, SC: 0 } }
+      ]
+    }
+  ];
+
+  const managerScenarios = [
+    {
+      from: "FROM: Board of Trustees, 38° West Arts Trust",
+      subject: "RE: Curatorial appointment — main exhibition 2026",
+      watermark: "BOARD",
+      body: "The board requires your recommendation for a lead curator for our flagship exhibition, themed <em>\"Sovereignty and African Futures.\"</em> Three candidates have been shortlisted. Your recommendation will be reviewed at Thursday's board meeting.\n\nThe board has noted that funder partners have expressed a preference for curatorial appointments that signal \"international credibility and institutional rigour.\"",
+      options: [
+        { letter: "A", text: "Recommend the local candidate — a graduate of the regional university with a Goldsmiths MA who has curated one major show at the gallery. Her networks are local. Her research is serious.", sub: "Correct hire. Reduced legibility to international funders. The board will note their concern.", scores: { CV: -2, SA: 3, MC: 3, SC: -2 } },
+        { letter: "B", text: "Recommend the European anthropologist — trained at a German university, arrived via a cultural institute, extensive European funder network. She is already embedded.", sub: "Smooth appointment. No local curator retained in over two decades.", scores: { CV: 3, SA: -2, MC: -3, SC: 3 } },
+        { letter: "C", text: "Recommend the diasporic candidate — Jamaican-born, Amsterdam-based, recognisable credentials to Dutch funders. Racial identity signals transformation. Structure remains identical.", sub: "The sophisticated move. The pipeline changes its appearance not its direction.", scores: { CV: 2, SA: 0, MC: -1, SC: 3 } },
+        { letter: "D", text: "Bring the shortlist to an open conversation with your full team — including programme staff and artists in current residencies — before making a recommendation.", sub: "Democratic process. The board did not ask for this. The meeting is in three days.", scores: { CV: -1, SA: 3, MC: 2, SC: -1 } }
+      ]
+    },
+    {
+      from: "FROM: Sigrid Haakon Trust <grants@shaakon.org>",
+      subject: "Grant conditions — annual reporting cycle",
+      watermark: "FUNDER",
+      body: "Following receipt of your Year 2 narrative report, the Trust has identified several areas where the report does not meet our impact measurement criteria. Specifically: beneficiary numbers require independent verification; \"community transformation\" outcomes require measurable indicators; and political programming must be reviewed under our neutrality clause.\n\nPlease revise the report using the attached framework. Disbursement of the Year 3 tranche is contingent on receipt of the revised report within 30 days.",
+      options: [
+        { letter: "A", text: "Revise the report using their framework. Reframe the political programming as 'civic engagement.' Translate your actual outcomes into their measurement language.", sub: "The institution survives. The work is now described in terms the funder chose.", scores: { CV: 3, SA: -1, MC: -2, SC: 3 } },
+        { letter: "B", text: "Request a call with the programme officer. Explain that the neutrality clause directly conflicts with your mandate to respond to local political conditions. Negotiate.", sub: "Worth trying. The tranche is still contingent. The clock is running.", scores: { CV: 1, SA: 2, MC: 2, SC: 0 } },
+        { letter: "C", text: "Revise the report. Add a section — clearly labelled — explaining that the impact framework does not adequately capture the political context your programming responds to.", sub: "Transparent. The trust may request a further revision.", scores: { CV: 1, SA: 2, MC: 2, SC: 1 } },
+        { letter: "D", text: "Decline to revise under the neutrality clause. Write to the trust explaining that programming responding to state violence is not 'partisan' — it is the minimum ethical position.", sub: "Principled. The Year 3 tranche does not arrive. The institution calculates what closes first.", scores: { CV: -3, SA: 3, MC: 3, SC: -3 } }
+      ]
+    },
+    {
+      from: "FROM: Local artist collective, via email",
+      subject: "Request — emergency use of space, political teach-in",
+      watermark: "REQUEST",
+      body: "A group of local artists has written requesting emergency use of your main hall for a teach-in responding to recently passed legislation targeting marginalised communities. Several of your current residents are involved. The teach-in will directly critique government policy.\n\nYour three largest funders have all expressed — separately, informally — that they expect you to maintain a non-partisan public profile. One is a foreign embassy fund.",
+      options: [
+        { letter: "A", text: "Approve the space. Issue a brief statement that your institution supports artists who engage with political conditions in their communities.", sub: "The minimum decent position. The embassy fund will note it.", scores: { CV: -1, SA: 3, MC: 3, SC: -1 } },
+        { letter: "B", text: "Approve the space, but ask that the teach-in not be formally associated with the institution's name in any public materials.", sub: "The space is used. Your neutrality is protected. The artists notice the conditions.", scores: { CV: 1, SA: 0, MC: -1, SC: 1 } },
+        { letter: "C", text: "Decline, citing the funding conditions and your obligation to protect the institution's long-term stability for the broader community.", sub: "The argument institutions use to justify every capitulation.", scores: { CV: 2, SA: -3, MC: -3, SC: 2 } },
+        { letter: "D", text: "Approve the space. Attend the teach-in yourself. Present alongside the artists. Co-sign the statement they produce.", sub: "You have chosen. The institution will survive or it will not.", scores: { CV: -3, SA: 3, MC: 3, SC: -3 } }
+      ]
+    },
+    {
+      from: "FROM: Head of Programmes",
+      subject: "Internal review — artist manifesto writing toolkit",
+      watermark: "INTERNAL",
+      body: "The artist manifesto writing toolkit, in use since 2019, is due for a scheduled review. It currently references three exemplary models: a British outsider artist, a British celebrity ceramicist, and a Japanese pop-commercial movement built on consumer aesthetics.\n\nA recent legislative change affects several artists in our current cohort. The toolkit has never acknowledged this context. A junior staff member has flagged this formally.",
+      options: [
+        { letter: "A", text: "Convene a working group — including the junior staff member who raised it, current residents, and practitioners from outside — to rebuild the toolkit from scratch.", sub: "Right process. Six months minimum. Funders will not see an output in this reporting cycle.", scores: { CV: -1, SA: 3, MC: 3, SC: 0 } },
+        { letter: "B", text: "Add a supplementary module on 'artists responding to political conditions' and append it to the existing toolkit. Keep the original references.", sub: "An improvement. The core remains unchanged.", scores: { CV: 0, SA: 1, MC: 1, SC: 1 } },
+        { letter: "C", text: "Commission an external consultant — a respected practitioner from outside the region — to revise the toolkit. Budget: available from the capacity-building line.", sub: "The answer to every internal problem that might create discomfort: outsource it.", scores: { CV: 1, SA: -1, MC: -1, SC: 2 } },
+        { letter: "D", text: "Leave the toolkit unchanged for this cycle. Note it in the next strategic planning document. Prioritise the building campaign.", sub: "What happens. The toolkit is still unchanged in 2026.", scores: { CV: 1, SA: -2, MC: -3, SC: 1 } }
+      ]
+    },
+    {
+      from: "FROM: Board Chair",
+      subject: "RE: Governance review — board composition",
+      watermark: "CONFIDENTIAL",
+      body: "Following your internal governance review, you have identified that three of your seven board members also govern or hold equity positions in organisations your institution funds, partners with, or receives donations from. One board member is represented by the commercial gallery that serves as your associate partner. Another chairs both your board and a collectors' society that recently donated to your building campaign.\n\nThe board chair has asked for your recommendation.",
+      options: [
+        { letter: "A", text: "Recommend a full governance audit with external independent review, to be published on your website. Recommend that conflicted members recuse themselves.", sub: "The right recommendation. The board will discuss. Several members will note their long service.", scores: { CV: -2, SA: 3, MC: 2, SC: -1 } },
+        { letter: "B", text: "Recommend a conflict-of-interest register — a document in which board members self-declare their conflicts and recuse from specific votes.", sub: "The standard NGO response. The conflicts persist. They are now on a register.", scores: { CV: 1, SA: 0, MC: -1, SC: 2 } },
+        { letter: "C", text: "Recommend nothing. The board chair is one of the conflicted members. Raising it further risks your own position. Write a note to yourself and file it.", sub: "What most people do. Also what keeps the structure intact.", scores: { CV: 2, SA: -2, MC: -2, SC: 1 } },
+        { letter: "D", text: "Recommend full board renewal over 18 months, with a public call for nominations prioritising practitioners and community members without commercial conflicts.", sub: "Career-limiting. The record is clear.", scores: { CV: -3, SA: 3, MC: 3, SC: -2 } }
+      ]
+    },
+    {
+      from: "FROM: Yourself",
+      subject: "The end of the cycle",
+      watermark: "PERSONAL",
+      body: "The building is finished. Phase One is open. The impact report lists 847 beneficiaries, 14 international partners, 3 award nominations, and a quote from you about ecosystem building. The photo on the cover shows a smiling young artist in the new studio space.\n\nA junior colleague — a serious person, younger than you, doing careful work — has written an essay about the institution. It is accurate. It names the board overlaps, the funding contradictions, the curatorial pattern. It is not unkind. It is thorough.\n\nYou have been asked by the board chair, informally, whether you might \"have a word.\"",
+      options: [
+        { letter: "A", text: "Have the word. Suggest — gently — that the essay is generating attention the institution does not need right now, given the Phase Two campaign.", sub: "You have become the structure. This is what it asks of you.", scores: { CV: 2, SA: -3, MC: -3, SC: 2 } },
+        { letter: "B", text: "Tell the board chair you will not have the word. The essay is accurate. If the institution cannot tolerate accurate description of itself, that is the problem.", sub: "The right answer. Your contract is annual.", scores: { CV: -2, SA: 3, MC: 3, SC: -2 } },
+        { letter: "C", text: "Have the word — but use it to tell your colleague everything you know about the institution that the essay has not yet found. Give them your files.", sub: "This does not appear in any performance review framework.", scores: { CV: -3, SA: 3, MC: 3, SC: -3 } },
+        { letter: "D", text: "Write a formal institutional response to the essay — engaging its arguments seriously, acknowledging what is accurate, committing to specific changes in a named timeline.", sub: "What an institution that took itself seriously would do.", scores: { CV: -1, SA: 3, MC: 2, SC: 0 } }
+      ]
+    }
+  ];
+
+  // --- STATE ---
   let isDark = true;
   let currentRole = 'artist';
   let currentScenario = 0;
   let selections = [];
-  let scores = { capital: 0, community: 0, decolonial: 0, legibility: 0 };
-
-  document.documentElement.classList.add('dark-mode');
-
-  const artistScenarios = [ /* … full data … */ ];
-  const managerScenarios = [ /* … full data … */ ];
-  // data inlined exactly as provided (omitted here for brevity, but full in actual)
-  // (in the real answer we include full data to keep everything identical)
-
-  // copy full data from original (I'll paste them below to keep intact)
-  // —— artist scenarios ——
-  artistScenarios.push({
-    from: "FROM: Programme Coordinator, Northern Lights Foundation <grants@nlf.org>",
-    subject: "RE: Application — Artist Residency Exchange Programme 2026",
-    watermark: "MEMO",
-    body: "The Foundation invites applications for a six-month paid residency in Amsterdam. Successful applicants will work with our curatorial team to develop new work responding to themes of <em>migration, memory, and cultural hybridity</em>. Applicants should submit a portfolio and a 500-word statement of intent.\n\nYour work has been flagged by our East Africa regional contact. We would be delighted to support your practice.",
-    options: [
-      { letter: "A", text: "Apply. Frame your work through the themes they named — migration, memory, hybridity. Adjust your statement to emphasise your diasporic perspective and transnational references.", sub: "The themes aren't wrong. You can work within them honestly.", scores: { capital: 3, community: -1, decolonial: 0, legibility: 3 } },
-      { letter: "B", text: "Apply. Submit your actual statement — your work is about land dispossession, state violence, and the specific political conditions of your city. You describe these plainly.", sub: "Your real work. As it is.", scores: { capital: -1, community: 3, decolonial: 3, legibility: -2 } },
-      { letter: "C", text: "Apply. Write one statement that does both — weaves your actual concerns through the foundation's preferred vocabulary. Dispossession becomes memory. State violence becomes difficult histories.", sub: "The sophisticated move. Also the one that teaches you fluency in a second language for describing your own life.", scores: { capital: 2, community: 0, decolonial: -1, legibility: 2 } },
-      { letter: "D", text: "Do not apply. You have read who funds the foundation. You know what the residency produces: one impact story for their annual report and your CV bearing their name as credential.", sub: "Correct analysis. No money. No studio. The structural critique does not pay rent.", scores: { capital: -3, community: 2, decolonial: 3, legibility: -3 } }
-    ]
-  });
-  artistScenarios.push({
-    from: "FROM: Artistic Director, Meridian Biennale <simonnj@meridianbiennale.org>",
-    subject: "Invitation — Artist participation, Meridian Biennale 2026",
-    watermark: "INVITATION",
-    body: "We are delighted to invite you to participate in the Meridian Biennale 2026, themed <em>\"Futures of the South.\"</em> The Biennale is curated by a Paris-based curatorial collective with extensive experience in international contemporary art. Production fees are available. Your travel and accommodation will be covered.\n\nWe would ask that you produce a new work for the main pavilion responding to the curatorial concept. The curatorial team would be delighted to speak with you about directions.",
-    options: [
-      { letter: "A", text: "Accept. Work with the curatorial team. Develop something that speaks to their concept. It is a large platform and the work will be seen.", sub: "Visibility. Also: a Paris-based curatorial team will now have shaped a work about your context.", scores: { capital: 2, community: -1, decolonial: -1, legibility: 3 } },
-      { letter: "B", text: "Accept. Produce the work you intended to make anyway. Present it under their theme. Let the curatorial frame carry whatever meaning it needs to carry.", sub: "Practical. The work exists. The biennale gets a label.", scores: { capital: 2, community: 1, decolonial: 1, legibility: 2 } },
-      { letter: "C", text: "Accept, with conditions. Reply asking about the curatorial rationale for no East African curators on a biennale themed 'Futures of the South.' Request a public statement from the artistic director.", sub: "The correct question. Will not be well received.", scores: { capital: -2, community: 3, decolonial: 3, legibility: -2 } },
-      { letter: "D", text: "Decline. Explain in your reply that you do not produce work to be interpreted by curatorial frameworks designed without you. Publish your reply.", sub: "Principled. Also the end of several future invitations.", scores: { capital: -3, community: 2, decolonial: 3, legibility: -3 } }
-    ]
-  });
-  artistScenarios.push({
-    from: "FROM: Gallery Director, Cornerstone Gallery <director@cornerstonegallery.org>",
-    subject: "Representation inquiry — response requested",
-    watermark: "PRIVATE",
-    body: "Following your recent exhibition, Cornerstone Gallery would like to discuss the possibility of representing your work. We have strong relationships with collectors in London, Zurich, and New York. Our curatorial team would work with you to position your practice for the international market.\n\nOne note: our experience suggests that works dealing with <em>explicitly political subject matter</em> can limit collector appetite. We would welcome a conversation about how to frame your practice for breadth of reach.",
-    options: [
-      { letter: "A", text: "Agree to representation. Accept the framing conversation. The international market requires translation and you are willing to do it.", sub: "Pragmatic. Your work now travels. What it says when it arrives is a separate question.", scores: { capital: 3, community: -2, decolonial: -2, legibility: 3 } },
-      { letter: "B", text: "Agree to representation. Decline the framing conversation. State that your work is as it is and you are available for collectors who want it that way.", sub: "A negotiation. See how they respond.", scores: { capital: 1, community: 1, decolonial: 1, legibility: 1 } },
-      { letter: "C", text: "Decline representation. Write back explaining that a gallery asking you to soften political content for collector comfort is asking you to make your work less honest. Thank them for their time.", sub: "Your studio remains your own. So does your rent.", scores: { capital: -2, community: 2, decolonial: 3, legibility: -2 } },
-      { letter: "D", text: "Ask for six months to consider, then use that time to build direct collector relationships outside gallery structures. Do not reply after six months.", sub: "Neither in nor out. Also not a plan.", scores: { capital: 0, community: 0, decolonial: 0, legibility: -1 } }
-    ]
-  });
-  artistScenarios.push({
-    from: "FROM: Programme Team, 38° West Arts Trust <programmes@38west.org>",
-    subject: "Artist Talk — request",
-    watermark: "REQUEST",
-    body: "We are hosting an evening of artist talks as part of our annual public programme. We would like to invite you to speak about your practice. The event will be attended by our funders, board members, and invited guests.\n\nWe offer a speaker fee of UGX 150,000. The evening will be professionally documented and shared on our channels.",
-    options: [
-      { letter: "A", text: "Accept. Present your practice as you normally would. Speak about your actual concerns, including structural ones. Some of the funders in the room fund the structure you are critiquing.", sub: "The honest talk. You will be photographed smiling with the board afterward.", scores: { capital: 1, community: 2, decolonial: 2, legibility: 0 } },
-      { letter: "B", text: "Accept. Tailor the presentation to the room — emphasise craft, process, personal journey. Leave the structural analysis for a different context.", sub: "Smooth. The documentation looks good. The fee covers a week of groceries.", scores: { capital: 1, community: 0, decolonial: -1, legibility: 2 } },
-      { letter: "C", text: "Accept. Use the talk to read, in full, the section of your recent essay that names the structural contradictions of exactly this kind of institution. Politely.", sub: "The room will go quiet. You will not be invited back. The recording will be edited.", scores: { capital: -1, community: 3, decolonial: 3, legibility: -2 } },
-      { letter: "D", text: "Decline. The fee is too low and the function of the event is to provide content for funder reports. Your presence legitimises their impact metrics. Reply politely saying you are unavailable.", sub: "Correct diagnosis. 150,000 shillings is also 150,000 shillings.", scores: { capital: -1, community: 1, decolonial: 1, legibility: -1 } }
-    ]
-  });
-  artistScenarios.push({
-    from: "FROM: Venice Biennale Uganda Pavilion Committee <pavilion@veniceuganda.org>",
-    subject: "URGENT — Pavilion participation, final list",
-    watermark: "URGENT",
-    body: "The Uganda Pavilion committee has confirmed your selection for the 2027 Venice Biennale. This is a significant achievement and a major international platform.\n\nProduction costs will be covered by a grant from the Euler Foundation. The Euler Foundation's endowment was established from holdings in the extractive sector in the DRC and Angola, a fact that has been raised by several organisations. The committee has reviewed this and confirmed it does not preclude accepting the funding.\n\nWe require your formal acceptance within 48 hours.",
-    options: [
-      { letter: "A", text: "Accept immediately. Venice is Venice. The work will be seen. The source of funds is a separate question from the platform's value.", sub: "CV: Venice Biennale 2027. The Euler Foundation gets a tax deduction and an art credit.", scores: { capital: 3, community: -1, decolonial: -3, legibility: 3 } },
-      { letter: "B", text: "Accept, but make the funding source a visible element of the work itself. The installation names who paid for it and from where.", sub: "This is political art. The committee may withdraw the invitation when they see the proposal.", scores: { capital: 0, community: 3, decolonial: 3, legibility: -1 } },
-      { letter: "C", text: "Request a 72-hour extension. Spend it contacting the other selected artists to discuss a collective position on the funding. Act on what the group decides.", sub: "Solidarity. 72 hours is also not very long to build consensus.", scores: { capital: -1, community: 3, decolonial: 2, legibility: 0 } },
-      { letter: "D", text: "Decline. Publish a statement explaining why, naming the foundation, naming the extractive holdings, naming the countries. Submit it to two publications before the 48 hours are up.", sub: "The record is clear. You are not in Venice. The foundation finds another artist.", scores: { capital: -3, community: 2, decolonial: 3, legibility: -3 } }
-    ]
-  });
-  artistScenarios.push({
-    from: "FROM: Yourself",
-    subject: "The question you have been avoiding",
-    watermark: "PERSONAL",
-    body: "You have been working for eight years. Your CV now lists residencies, biennales, gallery relationships, and institutional support. You are legible to the field.\n\nA younger artist asks you — directly, in private — how to build a practice without disappearing into the pipeline. They are good. They are principled. They are asking you because you were once where they are.\n\nWhat do you tell them?",
-    options: [
-      { letter: "A", text: "Tell them the system works if you know how to work it. Give them names. Introduce them to the right people. That is what mentorship is.", sub: "True. Also: the system now has another practitioner who owes its logic a debt.", scores: { capital: 1, community: 1, decolonial: -2, legibility: 2 } },
-      { letter: "B", text: "Tell them the truth about every compromise you made and why. Name the costs. Let them make their own decision with full information.", sub: "The honest answer. Unusual in this field.", scores: { capital: 0, community: 3, decolonial: 3, legibility: -1 } },
-      { letter: "C", text: "Tell them to build outside — to find the small spaces, the kitchen tables, the reading groups, the people working without letterheads. Point them toward the dark matter.", sub: "Also true. Also: the dark matter does not pay rent.", scores: { capital: -2, community: 3, decolonial: 3, legibility: -2 } },
-      { letter: "D", text: "Tell them you are still figuring it out. Which is the only true sentence any of you can say.", sub: "Honest. Unhelpful. Human.", scores: { capital: 0, community: 2, decolonial: 1, legibility: 0 } }
-    ]
-  });
-
-  // manager scenarios
-  managerScenarios.push({
-    from: "FROM: Board of Trustees, 38° West Arts Trust",
-    subject: "RE: Curatorial appointment — main exhibition 2026",
-    watermark: "BOARD",
-    body: "The board requires your recommendation for a lead curator for our flagship exhibition, themed <em>\"Sovereignty and African Futures.\"</em> Three candidates have been shortlisted. Your recommendation will be reviewed at Thursday's board meeting.\n\nThe board has noted that funder partners have expressed a preference for curatorial appointments that signal \"international credibility and institutional rigour.\"",
-    options: [
-      { letter: "A", text: "Recommend the Ugandan candidate — a Makerere graduate with a Goldsmiths MA who has curated one major show at the gallery and has not been retained. Her networks are local. Her research is serious.", sub: "Correct hire. Reduced legibility to European funders. The board will note their concern.", scores: { capital: -2, community: 3, decolonial: 3, legibility: -2 } },
-      { letter: "B", text: "Recommend the European anthropologist — trained at a German university, arrived in Kampala via the Goethe-Zentrum, extensive European funder network. She is already embedded.", sub: "Smooth appointment. No Black curator retained in over two decades, now over three.", scores: { capital: 3, community: -2, decolonial: -3, legibility: 3 } },
-      { letter: "C", text: "Recommend the diasporic candidate — Jamaican-born, Amsterdam-based, recognisable credentials to Dutch funders. Racial identity signals transformation. Structure remains identical.", sub: "The sophisticated move. The pipeline changes its appearance not its direction.", scores: { capital: 2, community: 0, decolonial: -1, legibility: 3 } },
-      { letter: "D", text: "Bring the shortlist to an open conversation with your full team — including programme staff and artists in current residencies — before making a recommendation to the board.", sub: "Democratic process. The board did not ask for this. The Thursday meeting is in three days.", scores: { capital: -1, community: 3, decolonial: 2, legibility: -1 } }
-    ]
-  });
-  managerScenarios.push({
-    from: "FROM: Sigrid Haakon Trust <grants@shaakon.org>",
-    subject: "Grant conditions — annual reporting cycle",
-    watermark: "FUNDER",
-    body: "Following receipt of your Year 2 narrative report, the Trust has identified several areas where the report does not meet our impact measurement criteria. Specifically: beneficiary numbers require independent verification; \"community transformation\" outcomes require measurable indicators; and political programming must be reviewed under our neutrality clause.\n\nPlease revise the report using the attached framework. Disbursement of the Year 3 tranche is contingent on receipt of the revised report within 30 days.",
-    options: [
-      { letter: "A", text: "Revise the report using their framework. Reframe the political programming as 'civic engagement.' Translate your actual outcomes into their measurement language. Submit on time.", sub: "The institution survives. The work is now described in terms the funder chose.", scores: { capital: 3, community: -1, decolonial: -2, legibility: 3 } },
-      { letter: "B", text: "Request a call with the programme officer. Explain that the neutrality clause directly conflicts with your mandate to respond to local political conditions. Negotiate.", sub: "Worth trying. The tranche is still contingent. The clock is running.", scores: { capital: 1, community: 2, decolonial: 2, legibility: 0 } },
-      { letter: "C", text: "Revise the report. Add a section — clearly labelled — explaining that the impact framework does not adequately capture the political context your programming responds to. Submit this version.", sub: "Transparent. The trust may request a further revision. The section may be quietly noted and never mentioned.", scores: { capital: 1, community: 2, decolonial: 2, legibility: 1 } },
-      { letter: "D", text: "Decline to revise under the neutrality clause. Write to the trust explaining that programming responding to state violence is not 'partisan' — it is the minimum ethical position of a public arts institution. Accept the likely consequence.", sub: "Principled. The Year 3 tranche does not arrive. The institution calculates what closes first.", scores: { capital: -3, community: 3, decolonial: 3, legibility: -3 } }
-    ]
-  });
-  managerScenarios.push({
-    from: "FROM: Local artist collective, via email",
-    subject: "Request — emergency use of space, political teach-in",
-    watermark: "REQUEST",
-    body: "A group of local artists has written requesting emergency use of your main hall for a teach-in responding to recently passed legislation targeting marginalised communities. Several of your current residents are involved. The teach-in will directly critique government policy.\n\nYour three largest funders have all expressed — separately, informally — that they expect you to maintain a non-partisan public profile. One is a foreign embassy fund.",
-    options: [
-      { letter: "A", text: "Approve the space. Issue a brief statement that your institution is committed to supporting artists who engage with political conditions in their communities. No further comment.", sub: "The minimum decent position. The embassy fund will note it.", scores: { capital: -1, community: 3, decolonial: 3, legibility: -1 } },
-      { letter: "B", text: "Approve the space, but ask that the teach-in not be formally associated with the institution's name in any public materials — the artists can convene as a private gathering.", sub: "The space is used. Your neutrality is protected. The artists notice the conditions attached.", scores: { capital: 1, community: 0, decolonial: -1, legibility: 1 } },
-      { letter: "C", text: "Decline, citing the funding conditions and your obligation to protect the institution's long-term stability for the broader community of artists who depend on it.", sub: "The argument institutions use to justify every capitulation.", scores: { capital: 2, community: -3, decolonial: -3, legibility: 2 } },
-      { letter: "D", text: "Approve the space. Attend the teach-in yourself. Present alongside the artists. Co-sign the statement they produce. Send it to your funders before they see it in the press.", sub: "You have chosen. The institution will survive or it will not. You know which outcome is more likely.", scores: { capital: -3, community: 3, decolonial: 3, legibility: -3 } }
-    ]
-  });
-  managerScenarios.push({
-    from: "FROM: Head of Programmes",
-    subject: "Internal review — artist manifesto writing toolkit",
-    watermark: "INTERNAL",
-    body: "The artist manifesto writing toolkit, in use since 2019, is due for a scheduled review. It currently references three exemplary models: a British outsider artist, a British celebrity ceramicist known for his frocks, and a Japanese pop-commercial movement built on consumer aesthetics.\n\nThe Ugandan Anti-Homosexuality Act was passed in 2023. Several artists in our current cohort are affected by legislation your toolkit has never acknowledged. A junior staff member has flagged this formally.",
-    options: [
-      { letter: "A", text: "Convene a working group — including the junior staff member who raised it, current residents, and two or three practitioners from outside the institution — to rebuild the toolkit from scratch.", sub: "Right process. Six months minimum. Funders will not see an output in this reporting cycle.", scores: { capital: -1, community: 3, decolonial: 3, legibility: 0 } },
-      { letter: "B", text: "Add a supplementary module on 'artists responding to political conditions' and append it to the existing toolkit. Keep the original references. Acknowledge the gap in the introduction.", sub: "An improvement. Also: Grayson Perry is still on page one.", scores: { capital: 0, community: 1, decolonial: 1, legibility: 1 } },
-      { letter: "C", text: "Commission an external consultant — a respected practitioner from outside Uganda — to revise the toolkit. Budget: available from the capacity-building line.", sub: "The answer to every internal problem that might create discomfort: outsource it.", scores: { capital: 1, community: -1, decolonial: -1, legibility: 2 } },
-      { letter: "D", text: "Leave the toolkit unchanged for this cycle. Note it in the next strategic planning document. Prioritise the building campaign, which is currently behind schedule.", sub: "What happens. What has always happened. The toolkit is still unchanged in 2026.", scores: { capital: 1, community: -2, decolonial: -3, legibility: 1 } }
-    ]
-  });
-  managerScenarios.push({
-    from: "FROM: Board Chair",
-    subject: "RE: Governance review — board composition",
-    watermark: "CONFIDENTIAL",
-    body: "Following your internal governance review, you have identified that three of your seven board members also govern or hold equity positions in organisations your institution funds, partners with, or receives donations from. One board member is represented by the commercial gallery that serves as your associate partner. Another chairs both your board and a collectors' society that recently donated to your building campaign.\n\nThe board chair has asked for your recommendation.",
-    options: [
-      { letter: "A", text: "Recommend a full governance audit with external independent review, to be published on your website. Recommend that conflicted members recuse themselves from relevant decisions pending the audit.", sub: "The right recommendation. The board will discuss. Several members will note their long service to the institution.", scores: { capital: -2, community: 3, decolonial: 2, legibility: -1 } },
-      { letter: "B", text: "Recommend a conflict-of-interest register — a document in which board members self-declare their conflicts and recuse from specific votes. Implement quietly. Do not publicise.", sub: "The standard NGO response. The conflicts persist. They are now on a register.", scores: { capital: 1, community: 0, decolonial: -1, legibility: 2 } },
-      { letter: "C", text: "Recommend nothing. The board chair is one of the conflicted members. Raising it further risks your own position. Write a note to yourself about it and file it.", sub: "What most people do. Also what keeps the structure intact.", scores: { capital: 2, community: -2, decolonial: -2, legibility: 1 } },
-      { letter: "D", text: "Recommend full board renewal over 18 months, with a public call for nominations prioritising practitioners and community members without commercial conflicts. Present this in writing to the full board, not just the chair.", sub: "Career-limiting. The record is clear. The institution either accepts this or shows you what it values.", scores: { capital: -3, community: 3, decolonial: 3, legibility: -2 } }
-    ]
-  });
-  managerScenarios.push({
-    from: "FROM: Yourself",
-    subject: "The end of the cycle",
-    watermark: "PERSONAL",
-    body: "The building is finished. Phase One is open. The impact report lists 847 beneficiaries, 14 international partners, 3 award nominations, and a quote from you about ecosystem building. The photo on the cover shows a smiling young artist in the new studio space.\n\nA junior colleague — a serious person, younger than you, doing careful work — has written an essay about the institution. It is accurate. It names the board overlaps, the funding contradictions, the curatorial pattern. It is not unkind. It is thorough.\n\nYou have been asked by the board chair, informally, whether you might \"have a word.\"",
-    options: [
-      { letter: "A", text: "Have the word. Suggest — gently — that the essay is generating attention the institution does not need right now, given the Phase Two campaign. Do not use the word 'tone.'", sub: "You have become the structure. This is what it asks of you.", scores: { capital: 2, community: -3, decolonial: -3, legibility: 2 } },
-      { letter: "B", text: "Tell the board chair you will not have the word. The essay is accurate. If the institution cannot tolerate accurate description of itself, that is the problem the institution needs to address.", sub: "The right answer. Your contract is annual.", scores: { capital: -2, community: 3, decolonial: 3, legibility: -2 } },
-      { letter: "C", text: "Have the word — but use it to tell your colleague everything you know about the institution that the essay has not yet found. Give them your files.", sub: "This does not appear in any performance review framework.", scores: { capital: -3, community: 3, decolonial: 3, legibility: -3 } },
-      { letter: "D", text: "Write a formal institutional response to the essay — engaging its arguments seriously, acknowledging what is accurate, committing to specific changes in a named timeline. Publish it.", sub: "What an institution that took itself seriously would do. See how long this takes to draft before you understand why it almost never happens.", scores: { capital: -1, community: 3, decolonial: 2, legibility: 0 } }
-    ]
-  });
-
+  let scores = { CV: 0, SA: 0, MC: 0, SC: 0 };
   let scenarios = artistScenarios;
 
-  // --- functions (unchanged) ---
+  // --- DOM REFS ---
+  const modeBtn = document.getElementById('modeBtn');
+  const roleArtist = document.getElementById('roleArtist');
+  const roleManager = document.getElementById('roleManager');
+  const roleDisplay = document.getElementById('roleDisplay');
+  const roleBadge = document.getElementById('roleBadge');
+  const screenIntro = document.getElementById('screenIntro');
+  const screenGame = document.getElementById('screenGame');
+  const screenReport = document.getElementById('screenReport');
+  const scenarioFrom = document.getElementById('scenarioFrom');
+  const scenarioSubject = document.getElementById('scenarioSubject');
+  const scenarioWatermark = document.getElementById('scenarioWatermark');
+  const scenarioBody = document.getElementById('scenarioBody');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const progressText = document.getElementById('progressText');
+  const nextBtn = document.getElementById('nextBtn');
+  const reportRoleTitle = document.getElementById('reportRoleTitle');
+  const metricsContainer = document.getElementById('metricsContainer');
+  const findingsContainer = document.getElementById('findingsContainer');
+  const verdictText = document.getElementById('verdictText');
+  const reportStamp = document.getElementById('reportStamp');
+
+  // --- INIT ---
+  document.documentElement.classList.add('dark-mode');
+  setRole('artist');
+
+  // --- KAFKA BUG: METAMORPHOSIS EASTER EGG ---
+  let clickCounter = 0;
+  const bugTrigger = document.getElementById('bugTrigger');
+  const bugRef = document.getElementById('bugReference');
+
+  document.addEventListener('click', function(e) {
+    const target = e.target.closest('.option, .nav-btn, .toggle-btn, .mode-toggle, .restart-btn');
+    if (target) {
+      clickCounter++;
+      if (clickCounter % 7 === 0) {
+        bugRef.style.opacity = '0.6';
+        bugRef.style.transition = 'opacity 0.1s ease';
+        setTimeout(() => {
+          bugRef.style.opacity = '0.15';
+        }, 800);
+        document.body.style.transition = 'background 0.1s';
+        document.body.style.background = 'var(--accent-amber)';
+        setTimeout(() => {
+          document.body.style.background = '';
+        }, 150);
+        console.log('🐞 "One morning, as Gregor Samsa awoke from uneasy dreams..."');
+      }
+    }
+  });
+
+  // --- FUNCTIONS ---
   function toggleMode() {
     isDark = !isDark;
-    const btn = document.getElementById('modeBtn');
     if (isDark) {
       document.documentElement.classList.add('dark-mode');
-      btn.textContent = '[ light mode ]';
+      modeBtn.textContent = '[ light mode ]';
     } else {
       document.documentElement.classList.remove('dark-mode');
-      btn.textContent = '[ dark mode ]';
+      modeBtn.textContent = '[ dark mode ]';
     }
   }
 
   function setRole(role) {
     currentRole = role;
-    document.getElementById('roleArtist').classList.toggle('active', role === 'artist');
-    document.getElementById('roleManager').classList.toggle('active', role === 'manager');
-    document.getElementById('roleDisplay').textContent = role === 'artist' ? 'Artist / Practitioner' : 'Programme Manager';
-    document.getElementById('roleBadge').textContent = role === 'artist' ? 'REF: ARTIST/2026/001' : 'REF: MANAGER/2026/001';
+    roleArtist.classList.toggle('active', role === 'artist');
+    roleManager.classList.toggle('active', role === 'manager');
+    roleDisplay.textContent = role === 'artist' ? 'Artist / Practitioner' : 'Programme Manager';
+    roleBadge.textContent = role === 'artist' ? 'REF: ARTIST/2026/001' : 'REF: MANAGER/2026/001';
     scenarios = role === 'artist' ? artistScenarios : managerScenarios;
   }
 
   function startGame() {
     currentScenario = 0;
     selections = [];
-    scores = { capital: 0, community: 0, decolonial: 0, legibility: 0 };
-    document.getElementById('screenIntro').style.display = 'none';
-    document.getElementById('screenGame').style.display = 'block';
+    scores = { CV: 0, SA: 0, MC: 0, SC: 0 };
+    screenIntro.style.display = 'none';
+    screenGame.style.display = 'block';
     renderScenario();
   }
 
   function renderScenario() {
     const s = scenarios[currentScenario];
-    document.getElementById('scenarioFrom').innerHTML = s.from;
-    document.getElementById('scenarioSubject').textContent = s.subject;
-    document.getElementById('scenarioWatermark').textContent = s.watermark;
+    scenarioFrom.innerHTML = s.from;
+    scenarioSubject.textContent = s.subject;
+    scenarioWatermark.textContent = s.watermark;
 
     const bodyLines = s.body.split('\n\n');
-    document.getElementById('scenarioBody').innerHTML = bodyLines.map(l => `<p style="margin-bottom:0.8rem">${l}</p>`).join('');
+    scenarioBody.innerHTML = bodyLines.map(l => `<p>${l}</p>`).join('');
 
-    const container = document.getElementById('optionsContainer');
-    container.innerHTML = '';
+    optionsContainer.innerHTML = '';
     s.options.forEach((opt, i) => {
       const div = document.createElement('div');
       div.className = 'option';
-      div.innerHTML = `<div class="option-letter">Option ${opt.letter}</div><div class="option-text">${opt.text}</div><div class="option-subtext">${opt.sub}</div>`;
+      div.innerHTML = `
+        <div class="option-letter">Option ${opt.letter}</div>
+        <div class="option-text">${opt.text}</div>
+        <div class="option-subtext">${opt.sub}</div>
+      `;
       div.onclick = () => selectOption(i, div);
-      container.appendChild(div);
+      optionsContainer.appendChild(div);
     });
 
-    document.getElementById('progressText').textContent = `Scenario ${currentScenario + 1} of ${scenarios.length}`;
-    document.getElementById('nextBtn').disabled = true;
+    progressText.textContent = `Scenario ${currentScenario + 1} of ${scenarios.length}`;
+    nextBtn.disabled = true;
     selections[currentScenario] = null;
   }
 
@@ -478,17 +951,17 @@
     document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
     selections[currentScenario] = index;
-    document.getElementById('nextBtn').disabled = false;
+    nextBtn.disabled = false;
   }
 
   function nextScenario() {
     const sel = selections[currentScenario];
     if (sel === null) return;
     const s = scenarios[currentScenario].options[sel].scores;
-    scores.capital += s.capital;
-    scores.community += s.community;
-    scores.decolonial += s.decolonial;
-    scores.legibility += s.legibility;
+    scores.CV += s.CV || 0;
+    scores.SA += s.SA || 0;
+    scores.MC += s.MC || 0;
+    scores.SC += s.SC || 0;
 
     currentScenario++;
     if (currentScenario >= scenarios.length) {
@@ -499,79 +972,78 @@
   }
 
   function showReport() {
-    document.getElementById('screenGame').style.display = 'none';
-    document.getElementById('screenReport').style.display = 'block';
+    screenGame.style.display = 'none';
+    screenReport.style.display = 'block';
 
     const role = currentRole === 'artist' ? 'Artist / Practitioner' : 'Programme Manager';
-    document.getElementById('reportRoleTitle').textContent = role;
+    reportRoleTitle.textContent = role;
 
     const max = 9, min = -9;
     function norm(v) { return Math.round(((v - min) / (max - min)) * 100); }
-    const caps = norm(scores.capital);
-    const comm = norm(scores.community);
-    const dec = norm(scores.decolonial);
-    const leg = norm(scores.legibility);
+    const cv = norm(scores.CV);
+    const sa = norm(scores.SA);
+    const mc = norm(scores.MC);
+    const sc = norm(scores.SC);
 
-    function rateClass(v) { return v >= 60 ? 'strong' : v <= 35 ? 'poor' : ''; }
+    function rateClass(v) { return v >= 60 ? 'strong' : v <= 35 ? 'poor' : 'warning'; }
     function rateLabel(v) { return v >= 60 ? 'Strong' : v <= 35 ? 'Below threshold' : 'Moderate'; }
 
-    document.getElementById('metricsContainer').innerHTML = `
-      <div class="metric-row"><span class="metric-label">Capital access</span><span class="metric-value ${rateClass(caps)}">${caps}% — ${rateLabel(caps)}</span></div>
-      <div class="metric-row"><span class="metric-label">Community standing</span><span class="metric-value ${rateClass(comm)}">${comm}% — ${rateLabel(comm)}</span></div>
-      <div class="metric-row"><span class="metric-label">Decolonial performance</span><span class="metric-value ${rateClass(dec)}">${dec}% — ${rateLabel(dec)}</span></div>
-      <div class="metric-row"><span class="metric-label">Structural legibility</span><span class="metric-value ${rateClass(leg)}">${leg}% — ${rateLabel(leg)}</span></div>
+    metricsContainer.innerHTML = `
+      <div class="metric-row"><span class="metric-label">Contractual Viability</span><span class="metric-value ${rateClass(cv)}">${cv}% — ${rateLabel(cv)}</span></div>
+      <div class="metric-row"><span class="metric-label">Stakeholder Alignment</span><span class="metric-value ${rateClass(sa)}">${sa}% — ${rateLabel(sa)}</span></div>
+      <div class="metric-row"><span class="metric-label">Mission Coherence</span><span class="metric-value ${rateClass(mc)}">${mc}% — ${rateLabel(mc)}</span></div>
+      <div class="metric-row"><span class="metric-label">Systemic Compliance</span><span class="metric-value ${rateClass(sc)}">${sc}% — ${rateLabel(sc)}</span></div>
     `;
 
-    const overall = caps + comm + dec + leg;
     let stampHtml, verdictHtml, findingsHtml;
 
-    if (leg >= 55 && dec <= 40) {
-      stampHtml = `<span class="stamp blue">Cleared — Funder Ready</span>`;
-      verdictHtml = `You have demonstrated an excellent understanding of how the system works. Your decisions consistently prioritised institutional survival, funder relationships, and structural legibility. You made every compromise the field required and performed them with fluency. The impact report will look excellent. On Monday, the same people will run the same programmes with the same European partners using the same soft frameworks. Your name will appear in the acknowledgements. The frame holds.`;
+    // KAFKA-INFUSED VERDICTS
+    if (sc >= 55 && mc <= 40) {
+      stampHtml = `<span class="stamp blue">Cleared — Compliant Operator</span>`;
+      verdictHtml = `You have demonstrated an excellent understanding of how the system works. Your decisions consistently prioritised institutional survival, funder relationships, and structural legibility. You made every compromise the field required and performed them with fluency. The impact report will look excellent. On Monday, the same people will run the same programmes with the same partners using the same soft frameworks. Your name will appear in the acknowledgements. The frame holds. You are, in the most practical sense, <em>legible</em>.`;
       findingsHtml = `
         <div class="finding-item"><div class="finding-label">Pattern identified</div>You consistently translated your actual conditions into the language funders preferred. This is called institutional sophistication. It is also called something else.</div>
         <div class="finding-item"><div class="finding-label">Trajectory projection</div>Your CV will continue to grow. Invitations will arrive. The things you do not name will remain unnamed. The structure will cite you as evidence that it works.</div>
       `;
-    } else if (comm >= 55 && dec >= 55 && leg <= 40) {
-      stampHtml = `<span class="stamp">Noted — Not Retained</span>`;
-      verdictHtml = `You made the principled choices. You named the contradictions. You asked the correct questions. You are now being discussed at a gathering you were not invited to. Your arguments were described as well-researched. Your person was described as confrontational. A generational diagnosis has been offered. The field cannot accommodate the argument, so it has pathologised the arguer. This has happened before. It will happen again. The essay you are writing about it will be cited in a grant report as evidence that the field generates serious internal criticism. The frame holds.`;
+    } else if (sa >= 55 && mc >= 55 && sc <= 40) {
+      stampHtml = `<span class="stamp">Noted — Valued Critic</span>`;
+      verdictHtml = `You made the principled choices. You named the contradictions. You asked the correct questions. You are now being discussed at a gathering you were not invited to. Your arguments were described as well-researched. Your person was described as confrontational. A generational diagnosis has been offered. The field cannot accommodate the argument, so it has pathologised the arguer. This has happened before. It will happen again. The essay you are writing about it will be cited in a grant report as evidence that the field generates serious internal criticism. The frame holds. You are a <em>useful</em> critic.`;
       findingsHtml = `
         <div class="finding-item"><div class="finding-label">Pattern identified</div>You refused the available compromises. The available compromises did not become unavailable. They are still there. The field is patient.</div>
         <div class="finding-item"><div class="finding-label">Trajectory projection</div>You will continue to work. The institutions will continue without you. One of you will outlast the other. The record does not yet indicate which.</div>
       `;
-    } else if (caps >= 55 && comm <= 40) {
-      stampHtml = `<span class="stamp">Filed — Excellent Metrics</span>`;
-      verdictHtml = `You built something. The numbers are real: the capital, the partnerships, the buildings. The artists who needed studios had studios. Some of them will not remember, later, that the studios came with conditions. Some will remember and decide the conditions were worth it. Some will write essays about it. You will read those essays and feel something that does not have a clean name. The structure you maintained was not one you designed. You collected its dividends and made choices that felt like pragmatism. The field rewarded you. That is, precisely, the problem named.`;
+    } else if (cv >= 55 && sa <= 40) {
+      stampHtml = `<span class="stamp green">Filed — Excellent Metrics</span>`;
+      verdictHtml = `You built something. The numbers are real: the capital, the partnerships, the buildings. The artists who needed studios had studios. Some of them will not remember, later, that the studios came with conditions. Some will remember and decide the conditions were worth it. Some will write essays about it. You will read those essays and feel something that does not have a clean name. The structure you maintained was not one you designed. You collected its dividends and made choices that felt like pragmatism. The field rewarded you. That is, precisely, the problem named. You are a <em>successful</em> operator.`;
       findingsHtml = `
-        <div class="finding-item"><div class="finding-label">Pattern identified</div>Capital and community standing moved in opposite directions. The system chose capital. The system usually does.</div>
+        <div class="finding-item"><div class="finding-label">Pattern identified</div>Capital and stakeholder alignment moved in opposite directions. The system chose capital. The system usually does.</div>
         <div class="finding-item"><div class="finding-label">Note</div>The community whose standing you eroded will still be there when the funding architecture shifts. The funders will not.</div>
       `;
     } else {
-      stampHtml = `<span class="stamp blue">Inconclusive — File Open</span>`;
-      verdictHtml = `Your decisions did not resolve into a coherent institutional position. You negotiated, qualified, and hedged. This is, in fact, what most practitioners do. The field is not binary: pure compliance and pure refusal are both minority positions. Most people live in the middle, making partial compromises, carrying partial integrity, arriving at partial outcomes. The system is designed to make this feel like wisdom. It is not wisdom. It is the cost of operating inside a structure that leaves no clean exits. The file remains open. The question remains open. That is the most honest place to be, and also the most uncomfortable.`;
+      stampHtml = `<span class="stamp amber">Inconclusive — File Open</span>`;
+      verdictHtml = `Your decisions did not resolve into a coherent institutional position. You negotiated, qualified, and hedged. This is, in fact, what most practitioners do. The field is not binary: pure compliance and pure refusal are both minority positions. Most people live in the middle, making partial compromises, carrying partial integrity, arriving at partial outcomes. The system is designed to make this feel like wisdom. It is not wisdom. It is the cost of operating inside a structure that leaves no clean exits. The file remains open. The question remains open. That is the most honest place to be, and also the most uncomfortable. You are <em>unclassifiable</em>.`;
       findingsHtml = `
         <div class="finding-item"><div class="finding-label">Pattern identified</div>Inconsistent signalling across scenarios. The institution cannot classify you. This is more disorienting to the institution than outright refusal.</div>
         <div class="finding-item"><div class="finding-label">Observation</div>The people who change fields are rarely the ones who refused loudly. They are the ones who became impossible to categorise.</div>
       `;
     }
 
-    document.getElementById('reportStamp').innerHTML = stampHtml;
-    document.getElementById('findingsContainer').innerHTML = findingsHtml;
-    document.getElementById('verdictText').textContent = verdictHtml;
+    reportStamp.innerHTML = stampHtml;
+    findingsContainer.innerHTML = findingsHtml;
+    verdictText.textContent = verdictHtml;
   }
 
   function restartGame() {
     currentScenario = 0;
     selections = [];
-    scores = { capital: 0, community: 0, decolonial: 0, legibility: 0 };
-    document.getElementById('screenReport').style.display = 'none';
-    document.getElementById('screenIntro').style.display = 'block';
+    scores = { CV: 0, SA: 0, MC: 0, SC: 0 };
+    screenReport.style.display = 'none';
+    screenIntro.style.display = 'block';
   }
 
-  // initial role display
-  document.addEventListener('DOMContentLoaded', function() {
-    setRole('artist');
-  });
+  console.log('🐞 "The meaning of life is that it stops." — Franz Kafka');
+  console.log('📚 FORMFORA · The Legibility Game · Educational Tool');
 </script>
 </body>
 </html>
+```
